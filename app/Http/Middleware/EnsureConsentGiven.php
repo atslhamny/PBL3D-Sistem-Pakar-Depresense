@@ -22,10 +22,14 @@ class EnsureConsentGiven
         }
 
         if (!$session || is_null($session->informed_consent_at)) {
+
             if ($request->expectsJson()) {
-                return response()->json(['error' => 'Consent required'], 403);
+                return response()->json([
+                    'redirect' => route('screening.consent')
+                ], 403);
             }
-            return auth()->check() ? redirect()->route('app.screening.start') : redirect()->route('guest.screening.start');
+
+            return redirect()->route('screening.consent');
         }
 
         $request->merge(['active_session' => $session]);
