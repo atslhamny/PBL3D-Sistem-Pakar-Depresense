@@ -1,3 +1,7 @@
+@props([
+    'maxWidth' => 'sm:max-w-md'
+])
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
@@ -14,15 +18,16 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans text-slate-900 antialiased bg-slate-50 dark:bg-slate-900 dark:text-slate-100 selection:bg-indigo-500 selection:text-white">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gradient-to-br from-indigo-50 via-white to-cyan-50 dark:from-slate-900 dark:via-slate-800 dark:to-indigo-950">
-            <div>
+    <body class="font-sans antialiased text-slate-900 bg-[#f0f9fa]">
+        <div class="min-h-screen flex flex-col items-center py-12 px-4 overflow-y-auto">
+            
+            <div class="mb-8 text-center shrink-0">
                 <a href="/">
-                    <h1 class="text-4xl font-extrabold tracking-tight text-indigo-600 dark:text-indigo-400">Depre<span class="text-cyan-500">Sense</span></h1>
+                    <h1 class="text-4xl font-bold tracking-tight text-[#0d7a70]">DepreSense</h1>
                 </a>
             </div>
 
-            <div class="w-full sm:max-w-xl mt-8 px-8 py-10 bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl shadow-2xl overflow-hidden sm:rounded-3xl border border-white/50 dark:border-slate-700/50 transition-all duration-300 hover:shadow-indigo-500/10">
+            <div class="w-full {{ $maxWidth }} my-auto px-6 md:px-10 py-8 bg-white shadow-[0_10px_40px_rgb(0,0,0,0.04)] border border-slate-100 rounded-[2.5rem] transition-all duration-500">
                 {{ $slot }}
             </div>
         </div>
