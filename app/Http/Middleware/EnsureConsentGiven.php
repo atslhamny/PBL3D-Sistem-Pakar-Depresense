@@ -13,15 +13,20 @@ class EnsureConsentGiven
     {
         $session = null;
         if (auth()->check()) {
-            $session = auth()->user()->screeningSessions()->where('status', 'in_progress')->first();
+            $session = auth()->user()->screeningSessions()
+                ->whereNotNull('informed_consent_at')
+                ->latest()
+                ->first();
         } else {
             $token = session('guest_session_token');
             if ($token) {
-                $session = ScreeningSession::where('session_token', $token)->where('status', 'in_progress')->first();
+                $session = ScreeningSession::where('session_token', $token)
+                    ->whereNotNull('informed_consent_at')
+                    ->first();
             }
         }
 
-        if (!$session || is_null($session->informed_consent_at)) {
+        if (!$session) {
 
             if ($request->expectsJson()) {
                 return response()->json([

@@ -25,7 +25,7 @@ class SaveAnswerRequest extends FormRequest
         return [
             'item_number' => 'required|integer|min:1|max:21',
             'question_id' => 'required|exists:bdi_questions,id',
-            'answer_value' => 'required|integer|min:0|max:2',
+            'answer_value' => 'required|integer|min:0|max:3',
         ];
     }
 }
