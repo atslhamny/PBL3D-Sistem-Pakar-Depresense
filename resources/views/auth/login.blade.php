@@ -16,7 +16,7 @@
             <input id="email" 
                    class="block w-full px-4 py-3 bg-slate-50 border-slate-100 focus:border-[#00aba9] focus:ring-[#00aba9] rounded-2xl shadow-sm text-sm" 
                    type="email" name="email" :value="old('email')" 
-                   placeholder="Masukkan Email" required autofocus autocomplete="username" />
+                   placeholder="contoh: budi@mahasiswa.ac.id" required autofocus autocomplete="username" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 

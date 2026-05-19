@@ -19,21 +19,24 @@
             <div>
                 <label for="university" class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1 ml-1">Universitas</label>
                 <input id="university" class="block w-full px-4 py-3 bg-slate-50 border-slate-100 focus:border-[#00aba9] focus:ring-[#00aba9] rounded-2xl shadow-sm text-sm" type="text" name="university" :value="old('university')" placeholder="Nama kampus" autocomplete="organization" />
+                <x-input-error :messages="$errors->get('university')" class="mt-2" />
             </div>
             <div>
                 <label for="semester" class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1 ml-1">Semester</label>
                 <input id="semester" class="block w-full px-4 py-3 bg-slate-50 border-slate-100 focus:border-[#00aba9] focus:ring-[#00aba9] rounded-2xl shadow-sm text-sm" type="number" min="1" max="14" name="semester" :value="old('semester')" placeholder="Contoh: 4" />
+                <x-input-error :messages="$errors->get('semester')" class="mt-2" />
             </div>
         </div>
 
         <div class="mb-4">
             <label for="study_program" class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1 ml-1">Program Studi</label>
             <input id="study_program" class="block w-full px-4 py-3 bg-slate-50 border-slate-100 focus:border-[#00aba9] focus:ring-[#00aba9] rounded-2xl shadow-sm text-sm" type="text" name="study_program" :value="old('study_program')" placeholder="Contoh: Sistem Informasi" />
+            <x-input-error :messages="$errors->get('study_program')" class="mt-2" />
         </div>
 
         <div class="mb-4">
             <label for="email" class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1 ml-1">Email</label>
-            <input id="email" class="block w-full px-4 py-3 bg-slate-50 border-slate-100 focus:border-[#00aba9] focus:ring-[#00aba9] rounded-2xl shadow-sm text-sm" type="email" name="email" :value="old('email')" placeholder="nama@email.com" required autocomplete="username" />
+            <input id="email" class="block w-full px-4 py-3 bg-slate-50 border-slate-100 focus:border-[#00aba9] focus:ring-[#00aba9] rounded-2xl shadow-sm text-sm" type="email" name="email" :value="old('email')" placeholder="contoh: budi@mahasiswa.ac.id" required autocomplete="username" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
@@ -42,7 +45,7 @@
             <div class="relative">
                 <input id="password" class="block w-full px-4 py-3 bg-slate-50 border-slate-100 focus:border-[#00aba9] focus:ring-[#00aba9] rounded-2xl shadow-sm text-sm"
                                 :type="showPw ? 'text' : 'password'"
-                                name="password" placeholder="Minimal 8 karakter"
+                                name="password" placeholder="contoh: rahasia123 (minimal 8 karakter)"
                                 required autocomplete="new-password" />
                 <button type="button" @click="showPw = !showPw" class="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400">
                     <svg x-show="!showPw" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
