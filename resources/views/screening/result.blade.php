@@ -1,61 +1,63 @@
-<x-guest-layout>
-    <div class="text-center mb-8">
-        <h2 class="text-3xl font-extrabold text-slate-800 dark:text-white mb-2">Hasil Assessment</h2>
-        <p class="text-slate-500 dark:text-slate-400 text-sm">Berdasarkan jawaban Anda pada kuesioner BDI-II</p>
+<x-guest-layout maxWidth="sm:max-w-3xl"> <div class="text-center mb-10">
+        <h2 class="text-3xl font-extrabold text-slate-800 mb-2">Hasil Assessment</h2>
+        <p class="text-slate-500 text-sm">Berdasarkan jawaban Anda pada kuesioner BDI-II</p>
     </div>
 
-    <!-- Score Cards -->
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-        <div class="bg-indigo-50 dark:bg-indigo-900/20 rounded-2xl p-4 text-center border border-indigo-100 dark:border-indigo-800/50">
-            <span class="block text-xs font-semibold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider mb-1">Skor Kognitif</span>
-            <span class="text-2xl font-bold text-slate-800 dark:text-white">{{ $session->score_cognitive_affective }}</span>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">
+        <div class="bg-slate-50 rounded-3xl p-4 text-center border border-slate-100 transition-hover duration-300 hover:shadow-md">
+            <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em] mb-1">Skor Kognitif</span>
+            <span class="text-2xl font-bold text-[#0d7a70]">{{ $session->score_cognitive_affective }}</span>
         </div>
-        <div class="bg-cyan-50 dark:bg-cyan-900/20 rounded-2xl p-4 text-center border border-cyan-100 dark:border-cyan-800/50">
-            <span class="block text-xs font-semibold text-cyan-600 dark:text-cyan-400 uppercase tracking-wider mb-1">Skor Somatik</span>
-            <span class="text-2xl font-bold text-slate-800 dark:text-white">{{ $session->score_somatic }}</span>
+        <div class="bg-slate-50 rounded-3xl p-4 text-center border border-slate-100 transition-hover duration-300 hover:shadow-md">
+            <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em] mb-1">Skor Somatik</span>
+            <span class="text-2xl font-bold text-[#0d7a70]">{{ $session->score_somatic }}</span>
         </div>
-        <div class="bg-blue-50 dark:bg-blue-900/20 rounded-2xl p-4 text-center border border-blue-100 dark:border-blue-800/50">
-            <span class="block text-xs font-semibold text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-1">Total BDI-II</span>
-            <span class="text-2xl font-bold text-slate-800 dark:text-white">{{ $session->score_total }}</span>
+        <div class="bg-slate-50 rounded-3xl p-4 text-center border border-slate-100 transition-hover duration-300 hover:shadow-md">
+            <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em] mb-1">Total BDI-II</span>
+            <span class="text-2xl font-bold text-[#0d7a70]">{{ $session->score_total }}</span>
         </div>
-        <div class="bg-purple-50 dark:bg-purple-900/20 rounded-2xl p-4 text-center border border-purple-100 dark:border-purple-800/50 relative overflow-hidden group">
-            <div class="absolute inset-0 bg-gradient-to-r from-purple-400 to-indigo-500 opacity-10 group-hover:opacity-20 transition-opacity"></div>
-            <span class="block text-xs font-semibold text-purple-600 dark:text-purple-400 uppercase tracking-wider mb-1 relative z-10">Fuzzy (0-100)</span>
-            <span class="text-2xl font-bold text-slate-800 dark:text-white relative z-10">{{ $session->fuzzy_centroid_value }}</span>
+        <div class="bg-slate-50 rounded-3xl p-4 text-center border border-slate-100 relative overflow-hidden group transition-hover duration-300 hover:shadow-md">
+            <div class="absolute inset-0 bg-[#0d7a70] opacity-5 group-hover:opacity-10 transition-opacity"></div>
+            <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em] mb-1 relative z-10">Fuzzy Value</span>
+            <span class="text-2xl font-bold text-[#0d7a70] relative z-10">{{ $session->fuzzy_centroid_value }}</span>
         </div>
     </div>
 
-    <!-- Result Box -->
     @php
-        $levelColor = match($session->depression_level->value) {
-            'minimal' => 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800/50',
-            'ringan' => 'bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-800/50',
-            'sedang' => 'bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-900/30 dark:text-orange-300 dark:border-orange-800/50',
-            'berat' => 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800/50',
+        $levelStyles = match($session->depression_level->value) {
+            'minimal' => 'bg-emerald-50 text-emerald-700 border-emerald-100',
+            'ringan'  => 'bg-amber-50 text-amber-700 border-amber-100',
+            'sedang'  => 'bg-orange-50 text-orange-700 border-orange-100',
+            'berat'   => 'bg-rose-50 text-rose-700 border-rose-100',
         };
     @endphp
 
-    <div class="mb-8">
-        <div class="text-center p-6 rounded-2xl border-2 {{ $levelColor }} shadow-sm">
-            <span class="block text-sm font-semibold uppercase tracking-wider mb-1 opacity-80">Tingkat Indikasi Depresi</span>
-            <h3 class="text-3xl sm:text-4xl font-black capitalize tracking-tight">{{ $session->depression_level->value }}</h3>
+    <div class="mb-10">
+        <div class="text-center p-8 rounded-[2rem] border-2 {{ $levelStyles }} shadow-sm">
+            <span class="block text-xs font-bold uppercase tracking-[0.2em] mb-2 opacity-70">Tingkat Indikasi Depresi</span>
+            <h3 class="text-4xl font-black capitalize tracking-tight">{{ $session->depression_level->value }}</h3>
         </div>
     </div>
 
-    <!-- Recommendations -->
-    <div class="mb-8 bg-white dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm">
-        <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80">
-            <h4 class="font-bold text-slate-800 dark:text-white flex items-center">
-                <svg class="w-5 h-5 mr-2 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                Rekomendasi Awal
+    <div class="mb-10 bg-white rounded-[2rem] border border-slate-100 overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
+        <div class="px-8 py-5 border-b border-slate-50 bg-slate-50/50">
+            <h4 class="font-bold text-slate-800 flex items-center">
+                <svg class="w-5 h-5 mr-3 text-[#0d7a70]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                Rekomendasi Langkah Awal
             </h4>
         </div>
-        <div class="p-6">
-            <ul class="space-y-3">
+        <div class="p-8">
+            <ul class="space-y-4">
                 @foreach($recommendations as $rec)
                     <li class="flex items-start">
-                        <svg class="w-5 h-5 mr-3 text-green-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                        <span class="text-slate-600 dark:text-slate-300">{{ $rec }}</span>
+                        <div class="mt-1 bg-emerald-100 rounded-full p-1 mr-4">
+                            <svg class="w-3 h-3 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                        </div>
+                        <span class="text-slate-600 leading-relaxed">{{ $rec }}</span>
                     </li>
                 @endforeach
             </ul>
@@ -63,14 +65,17 @@
     </div>
 
     @guest
-        <div class="p-5 bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800/50 rounded-2xl text-center mb-6">
-            <p class="text-sm text-indigo-800 dark:text-indigo-300 mb-4 font-medium">Buat akun untuk menyimpan hasil ini dan memantau perkembangan Anda di kemudian hari.</p>
-            <a href="{{ route('register') }}" class="inline-block bg-indigo-600 text-white px-6 py-2 rounded-xl font-medium shadow-sm hover:bg-indigo-700 hover:-translate-y-0.5 transition-all">Daftar Sekarang</a>
+        <div class="p-8 bg-[#f0f9fa] border border-cyan-100 rounded-[2rem] text-center mb-8">
+            <p class="text-sm text-slate-600 mb-6 font-medium">Simpan hasil assessment ini untuk memantau perkembangan kesehatan mental Anda secara berkala.</p>
+            <a href="{{ route('register') }}" class="inline-block bg-[#0d7a70] text-white px-8 py-3 rounded-2xl font-bold shadow-lg shadow-[#0d7a70]/20 hover:bg-[#0a635b] hover:-translate-y-0.5 transition-all duration-300">
+                Daftar Akun Sekarang
+            </a>
         </div>
     @endguest
 
     <div class="text-center">
-        <a href="{{ auth()->check() ? route('user.dashboard') : route('home') }}" class="inline-flex justify-center items-center px-6 py-3 border border-slate-300 dark:border-slate-600 rounded-xl shadow-sm text-base font-medium text-slate-700 bg-white hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 focus:outline-none transition-colors">
+        <a href="{{ auth()->check() ? route('user.dashboard') : route('home') }}" class="inline-flex justify-center items-center px-6 py-2 text-sm font-semibold text-slate-400 hover:text-[#0d7a70] transition-colors">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
             Kembali ke Beranda
         </a>
     </div>
