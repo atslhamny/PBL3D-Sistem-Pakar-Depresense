@@ -3,7 +3,7 @@
         <h2 class="text-2xl font-bold text-slate-800 mb-4">Sistem Pakar Deteksi Dini Depresi</h2>
         
         <p class="text-slate-500 mb-8 text-sm leading-relaxed px-2">
-            Menganalisis dan mendeteksi potensi tingkat depresi secara akurat menggunakan metode <strong>Fuzzy Mamdani</strong> dan kuesioner klinis <strong>BDI-II</strong>.
+            Menganalisis dan mendeteksi potensi tingkat depresi secara akurat menggunakan kuesioner klinis <strong>BDI-II</strong>.
         </p>
 
         <div class="space-y-4">
