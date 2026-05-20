@@ -42,6 +42,7 @@ Route::prefix('app')->name('user.')->middleware(['auth', 'role:user'])->group(fu
 // Admin Routes
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin', 'audit'])->group(function () {
     Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::get('dashboard/download-excel', [AdminDashboardController::class, 'downloadExcel'])->name('dashboard.download-excel');
     
     Route::resource('questions', AdminQuestionController::class);
     Route::resource('fuzzy-rules', AdminFuzzyRuleController::class);
