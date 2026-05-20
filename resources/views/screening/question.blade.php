@@ -63,8 +63,17 @@
                         class="w-full flex justify-center items-center px-6 py-4 border border-transparent rounded-2xl shadow-md shadow-teal-100 text-lg font-bold text-white bg-[#00aba9] hover:bg-[#0d7a70] focus:outline-none focus:ring-4 focus:ring-teal-100 disabled:opacity-40 disabled:cursor-not-allowed transition-all active:scale-[0.98]">
                     
                     <span x-show="!isSubmitting" class="flex items-center gap-2">
-                        Lanjut
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+                        @if($question->item_number == 21)
+                            Selesai
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                        @else
+                            Lanjut
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                            </svg>
+                        @endif
                     </span>
                     
                     <span x-show="isSubmitting" class="flex items-center">
@@ -87,8 +96,21 @@
                 selected: null,
                 isSubmitting: false,
                 error: null,
+                options: [],
 
-                options: answerOptions.map((text, i) => ({ text: text, value: i })),
+                init() {
+                    // 1. Petakan teks jawaban ke indeks aslinya (agar nilai backend tidak rusak)
+                    let mappedOptions = answerOptions.map((text, i) => ({ text: text, value: i }));
+                    
+                    // 2. Acak susunan array menggunakan Algoritma Fisher-Yates
+                    for (let i = mappedOptions.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [mappedOptions[i], mappedOptions[j]] = [mappedOptions[j], mappedOptions[i]];
+                    }
+                    
+                    // 3. Masukkan hasil acakan ke properti options Alpine
+                    this.options = mappedOptions;
+                },
 
                 async submitAnswer() {
                     if (this.selected === null) return;
@@ -106,7 +128,8 @@
                             body: JSON.stringify({
                                 question_id: this.questionId,
                                 item_number: this.itemNumber,
-                                answer_value: this.selected
+                                // x-model="selected" akan otomatis mengambil properti .value dari opsi yang dipilih
+                                answer_value: this.selected 
                             })
                         });
 
