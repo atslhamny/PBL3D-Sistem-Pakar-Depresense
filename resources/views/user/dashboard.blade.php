@@ -64,7 +64,7 @@
                 
                 <div class="text-[10px] text-slate-400 font-medium pt-3 border-t border-slate-50">
                     {{-- Proteksi Carbon format jika completed_at berupa string --}}
-                    Terakhir diperbarui: {{ flex_date_format($latestSession->completed_at) }}
+                    Terakhir diperbarui: {{ $latestSession->completed_at ? \Carbon\Carbon::parse($latestSession->completed_at)->format('d M, H:i') : '-' }}
                 </div>
             </div>
 
@@ -86,8 +86,8 @@
             <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between">
                 <div>
                     <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Tanggal Assessment</span>
-                    <span class="text-lg font-bold text-slate-700 block mt-2">{{ flex_date_format($latestSession->completed_at, 'd M Y') }}</span>
-                    <span class="text-xs text-slate-400">Pukul {{ flex_date_format($latestSession->completed_at, 'H:i') }} WIB</span>
+                    <span class="text-lg font-bold text-slate-700 block mt-2">{{ $latestSession->completed_at ? \Carbon\Carbon::parse($latestSession->completed_at)->format('d M Y') : '-' }}</span>
+                    <span class="text-xs text-slate-400">Pukul {{ $latestSession->completed_at ? \Carbon\Carbon::parse($latestSession->completed_at)->format('H:i') : '-' }} WIB</span>
                 </div>
                 <div class="text-[11px] text-slate-400">
                     Sesi tersimpan secara aman
@@ -141,16 +141,3 @@
         </div>
     @endif
 </x-app-layout>
-
-{{-- Helper Fungsi Blade lokal untuk mengamankan parsing tanggal Carbon --}}
-@php
-    if (!function_exists('flex_date_format')) {
-        function flex_date_format($date, $format = 'd M, H:i') {
-            if (!$date) return '-';
-            if ($date instanceof \Carbon\Carbon) {
-                return $date->format($format);
-            }
-            return \Carbon\Carbon::parse($date)->format($format);
-        }
-    }
-@endphp

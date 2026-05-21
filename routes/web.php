@@ -11,6 +11,7 @@ use App\Http\Controllers\Screening\ResultController;
 use App\Http\Controllers\User\DashboardController as UserDashboardController;
 use App\Http\Controllers\User\HistoryController as UserHistoryController;
 use App\Http\Controllers\User\RecommendationController as UserRecommendationController;
+use App\Http\Controllers\User\ResourceController as UserResourceController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\QuestionController as AdminQuestionController;
 use App\Http\Controllers\Admin\FuzzyRuleController as AdminFuzzyRuleController;
@@ -37,6 +38,7 @@ Route::prefix('app')->name('user.')->middleware(['auth', 'role:user'])->group(fu
     Route::get('dashboard', [UserDashboardController::class, 'index'])->name('dashboard');
     Route::get('history', [UserHistoryController::class, 'index'])->name('history');
     Route::get('recommendation', [UserRecommendationController::class, 'index'])->name('recommendation');
+    Route::get('resource', [UserResourceController::class, 'index'])->name('resource');
 });
 
 // Admin Routes
