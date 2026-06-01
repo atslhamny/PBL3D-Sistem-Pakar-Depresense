@@ -45,7 +45,7 @@
         @enderror
 
         <div class="flex gap-3">
-            <a href="{{ route('home') }}" 
+            <a href="{{ auth()->check() ? route('user.dashboard') : route('home') }}" 
                class="flex-1 px-4 py-4 text-center text-slate-500 bg-slate-50 hover:bg-slate-100 rounded-2xl font-bold transition-all border border-slate-100">
                 Batal
             </a>

@@ -97,11 +97,27 @@
             {{-- Card REKOMENDASI HARI INI --}}
             <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between">
                 <div>
-                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2">Rekomendasi Kegiatan</span>
-                    <p class="text-xs font-bold text-[#0d7a70] mb-1">Meditasi Pernafasan</p>
-                    <p class="text-[11px] text-slate-500 leading-relaxed">Latihan 5 menit untuk membantu menurunkan frekuensi detak jantung dan rileksasi saraf.</p>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2">Rekomendasi Hari Ini</span>
+                    @php
+                        $recTitle = 'Meditasi Ringan';
+                        $recDesc = 'Latihan 5 menit untuk membantu menurunkan frekuensi detak jantung dan rileksasi saraf.';
+                        $level = strtolower($latestSession->depression_level->value ?? '');
+                        
+                        if ($level === 'minimal') {
+                            $recTitle = 'Pertahankan Rutinitas';
+                            $recDesc = 'Tetap jalani rutinitas sehat, olahraga teratur, dan istirahat cukup untuk menjaga kondisi optimal.';
+                        } elseif (in_array($level, ['ringan', 'sedang'])) {
+                            $recTitle = 'Manajemen Waktu';
+                            $recDesc = 'Luangkan waktu untuk hobi atau aktivitas yang Anda senangi agar pikiran tidak terlalu tegang.';
+                        } elseif ($level === 'berat') {
+                            $recTitle = 'Cari Bantuan Profesional';
+                            $recDesc = 'Sangat disarankan untuk menghubungi layanan konseling mahasiswa atau psikolog terdekat.';
+                        }
+                    @endphp
+                    <p class="text-xs font-bold text-[#0d7a70] mb-1">{{ $recTitle }}</p>
+                    <p class="text-[11px] text-slate-500 leading-relaxed">{{ $recDesc }}</p>
                 </div>
-                <a href="#" class="text-xs font-bold text-[#0d7a70] hover:underline flex items-center">
+                <a href="{{ route('user.resource') }}" class="text-xs font-bold text-[#0d7a70] hover:underline flex items-center">
                     Buka Panduan
                     <svg class="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                 </a>
@@ -111,11 +127,11 @@
 
         {{-- Grafik Riwayat Penilaian Pendukung --}}
         <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-            <h3 class="text-base font-bold text-slate-800 mb-1">Riwayat Penilaian</h3>
+            <h3 class="text-base font-bold text-slate-800 mb-1">Riwayat Penilaian (5 Terakhir)</h3>
             <p class="text-xs text-slate-400 mb-6">Grafik fluktuasi tingkat indikasi stres Anda</p>
             
-            <div class="h-48 w-full bg-slate-50/50 rounded-xl flex items-center justify-center border border-dashed border-slate-200">
-                <span class="text-xs text-slate-400 italic">Visualisasi data grafik riwayat akan dimuat di sini</span>
+            <div class="h-64 w-full relative">
+                <canvas id="dashboardChart"></canvas>
             </div>
         </div>
 
@@ -139,5 +155,62 @@
                 </a>
             </div>
         </div>
+    @endif
+
+    @if($latestSession && $chartData)
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const ctx = document.getElementById('dashboardChart');
+                if(ctx) {
+                    new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: {!! json_encode($chartData['labels']) !!},
+                            datasets: [{
+                                label: 'Skor Total BDI-II',
+                                data: {!! json_encode($chartData['scores']) !!},
+                                borderColor: '#0d7a70',
+                                backgroundColor: 'rgba(13, 122, 112, 0.1)',
+                                borderWidth: 3,
+                                pointBackgroundColor: '#0d7a70',
+                                pointBorderColor: '#fff',
+                                pointBorderWidth: 2,
+                                pointRadius: 4,
+                                fill: true,
+                                tension: 0.4
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { display: false },
+                                tooltip: {
+                                    backgroundColor: '#1e293b',
+                                    padding: 12,
+                                    titleFont: { size: 13, family: 'Inter' },
+                                    bodyFont: { size: 13, family: 'Inter' },
+                                    displayColors: false,
+                                    cornerRadius: 8,
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    max: 63, // Max BDI-II score is 63
+                                    grid: { color: '#f1f5f9', drawBorder: false },
+                                    ticks: { font: { family: 'Inter', size: 11 }, color: '#94a3b8', stepSize: 10 }
+                                },
+                                x: {
+                                    grid: { display: false, drawBorder: false },
+                                    ticks: { font: { family: 'Inter', size: 11 }, color: '#94a3b8' }
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+        </script>
     @endif
 </x-app-layout>

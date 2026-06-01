@@ -1,4 +1,9 @@
-<x-guest-layout maxWidth="sm:max-w-3xl"> <div class="text-center mb-10">
+@if(auth()->check())
+    <x-app-layout>
+@else
+    <x-guest-layout maxWidth="sm:max-w-3xl">
+@endif
+    <div class="text-center mb-10 mt-6">
         <h2 class="text-3xl font-extrabold text-slate-800 mb-2">Hasil Assessment</h2>
         <p class="text-slate-500 text-sm">Berdasarkan jawaban Anda pada kuesioner BDI-II</p>
     </div>
@@ -73,10 +78,14 @@
         </div>
     @endguest
 
-    <div class="text-center">
+    <div class="text-center mt-4">
         <a href="{{ auth()->check() ? route('user.dashboard') : route('home') }}" class="inline-flex justify-center items-center px-6 py-2 text-sm font-semibold text-slate-400 hover:text-[#0d7a70] transition-colors">
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
             Kembali ke Beranda
         </a>
     </div>
-</x-guest-layout>
+@if(auth()->check())
+    </x-app-layout>
+@else
+    </x-guest-layout>
+@endif

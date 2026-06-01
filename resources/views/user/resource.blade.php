@@ -1,177 +1,119 @@
 <x-app-layout>
-    {{-- Bagian Atas: Header --}}
-    <div class="mb-8">
-        <h2 class="text-2xl font-bold text-slate-800">Pusat Bantuan & Edukasi</h2>
-        <p class="text-slate-500 text-sm mt-1">Temukan berbagai sumber daya, panduan praktis, dan bantuan profesional untuk mendukung kesehatan mental Anda.</p>
+    {{-- Header --}}
+    <div class="mb-8 max-w-3xl">
+        <h2 class="text-3xl font-extrabold text-slate-800 tracking-tight mb-2">Pusat Resource Mahasiswa</h2>
+        <p class="text-slate-500 text-sm leading-relaxed">
+            Temukan panduan, latihan meditasi, dan artikel pilihan untuk menjaga kesehatan mental di masa perkuliahan.
+        </p>
+    </div>
+
+    {{-- Filter Chips --}}
+    <div class="flex flex-wrap gap-3 mb-8">
+        <a href="{{ route('user.resource') }}" 
+           class="px-5 py-2 rounded-full text-sm font-semibold transition-all {{ !request('category') ? 'bg-[#0d7a70] text-white shadow-md shadow-teal-100' : 'bg-white text-slate-600 border border-slate-200 hover:border-slate-300 hover:bg-slate-50' }}">
+            Semua
+        </a>
+        @foreach($categories as $category)
+            <a href="{{ route('user.resource', ['category' => $category]) }}" 
+               class="px-5 py-2 rounded-full text-sm font-semibold transition-all capitalize {{ request('category') == $category ? 'bg-[#0d7a70] text-white shadow-md shadow-teal-100' : 'bg-white text-slate-600 border border-slate-200 hover:border-slate-300 hover:bg-slate-50' }}">
+                {{ $category }}
+            </a>
+        @endforeach
     </div>
 
     {{-- Grid Konten Utama --}}
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
-        {{-- Kolom Kiri & Tengah: Latihan & Artikel --}}
-        <div class="lg:col-span-2 space-y-8">
-            
-            {{-- Card: Latihan Pernafasan Interaktif (4-7-8 Technique) --}}
-            <div class="bg-gradient-to-br from-[#0d7a70] to-[#0a635b] text-white p-8 rounded-[2rem] shadow-lg relative overflow-hidden">
-                <div class="absolute right-0 bottom-0 opacity-10 translate-x-10 translate-y-10">
-                    <svg class="w-72 h-72" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15.5h-2v-2h2v2zm0-4.5h-2V7h2v6z"/>
-                    </svg>
-                </div>
-                
-                <div class="relative z-10">
-                    <span class="bg-white/20 text-white text-[10px] font-extrabold uppercase px-3 py-1 rounded-full tracking-wider inline-block mb-4">Latihan Relaksasi</span>
-                    <h3 class="text-2xl font-extrabold mb-2">Metode Pernapasan Kotak (4-4-4)</h3>
-                    <p class="text-teal-50 text-sm leading-relaxed mb-6 max-w-md">Latihan pernapasan sederhana namun sangat efektif untuk merilekskan sistem saraf Anda secara instan saat merasa cemas atau stres.</p>
-                    
-                    {{-- Visualizer Animasi Sederhana --}}
-                    <div class="flex items-center space-x-6 p-4 bg-white/10 rounded-2xl backdrop-blur-sm max-w-md" x-data="{ state: 'Mulai', count: 0, timer: null, running: false,
-                        startBreath() {
-                            if (this.running) {
-                                clearInterval(this.timer);
-                                this.running = false;
-                                this.state = 'Mulai';
-                                this.count = 0;
-                                return;
-                            }
-                            this.running = true;
-                            this.state = 'Tarik Nafas';
-                            this.count = 4;
-                            this.timer = setInterval(() => {
-                                this.count--;
-                                if (this.count <= 0) {
-                                    if (this.state === 'Tarik Nafas') {
-                                        this.state = 'Tahan Nafas';
-                                        this.count = 4;
-                                    } else if (this.state === 'Tahan Nafas') {
-                                        this.state = 'Hembuskan';
-                                        this.count = 4;
-                                    } else {
-                                        this.state = 'Tarik Nafas';
-                                        this.count = 4;
-                                    }
-                                }
-                            }, 1000);
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @forelse($articles as $article)
+            <div class="bg-white rounded-3xl border border-slate-100 overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col h-full group">
+                {{-- Thumbnail / Visual Area --}}
+                <div class="h-48 relative p-6 flex flex-col justify-between
+                    @php
+                        // Memberikan variasi warna background berdasarkan kategori
+                        $bgClass = 'bg-[#f0f9fa] text-[#0d7a70]';
+                        $badgeClass = 'bg-teal-100/80 text-teal-800';
+                        $cat = strtolower($article->category);
+                        if(str_contains($cat, 'audio') || str_contains($cat, 'meditasi')) {
+                            $bgClass = 'bg-sky-50 text-sky-600';
+                            $badgeClass = 'bg-sky-100 text-sky-800';
+                        } elseif (str_contains($cat, 'video')) {
+                            $bgClass = 'bg-indigo-50 text-indigo-600';
+                            $badgeClass = 'bg-indigo-100 text-indigo-800';
+                        } elseif (str_contains($cat, 'panduan')) {
+                            $bgClass = 'bg-amber-50 text-amber-600';
+                            $badgeClass = 'bg-amber-100 text-amber-800';
                         }
-                    }">
-                        <div class="relative flex items-center justify-center h-16 w-16 bg-white text-[#0d7a70] rounded-full font-bold shadow-md cursor-pointer hover:scale-105 transition-transform"
-                             @click="startBreath()">
-                            <svg x-show="!running" class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M8 5v14l11-7z"/>
-                            </svg>
-                            <svg x-show="running" class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" style="display:none;">
-                                <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
-                            </svg>
+                    @endphp
+                    {{ $bgClass }}
+                ">
+                    <span class="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest {{ $badgeClass }} w-max self-start backdrop-blur-sm">
+                        {{ $article->category }}
+                    </span>
+                    
+                    <div class="flex-1 flex items-center justify-center">
+                        {{-- Generic Icon based on category --}}
+                        @if(str_contains($cat, 'audio') || str_contains($cat, 'meditasi'))
+                            <svg class="w-16 h-16 opacity-70 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
+                        @elseif (str_contains($cat, 'video'))
+                            <svg class="w-16 h-16 opacity-70 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                        @elseif (str_contains($cat, 'panduan'))
+                            <svg class="w-16 h-16 opacity-70 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        @else
+                            <svg class="w-16 h-16 opacity-70 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                        @endif
+                    </div>
+                </div>
+
+                {{-- Content Area --}}
+                <div class="p-6 flex-1 flex flex-col">
+                    <h3 class="text-lg font-bold text-slate-800 mb-2 line-clamp-2 leading-snug group-hover:text-[#0d7a70] transition-colors">
+                        <a href="#">{{ $article->title }}</a>
+                    </h3>
+                    <p class="text-sm text-slate-500 mb-6 line-clamp-3 leading-relaxed flex-1">
+                        {{ $article->excerpt }}
+                    </p>
+                    
+                    <div class="flex items-center justify-between text-slate-400 pt-4 border-t border-slate-50 mt-auto">
+                        <div class="flex items-center text-xs font-medium">
+                            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            5 Menit {{ str_contains($cat, 'video') || str_contains($cat, 'audio') ? 'Putar' : 'Baca' }}
                         </div>
-                        <div>
-                            <p class="text-xs font-semibold text-teal-150 uppercase tracking-widest" x-text="running ? 'Ikuti petunjuk' : 'Tekan tombol play untuk memulai'"></p>
-                            <h4 class="text-xl font-bold transition-all" x-text="running ? state + ' (' + count + 's)' : 'Mulai Latihan 1 Menit'"></h4>
+                        <div class="flex items-center space-x-3">
+                            <button class="hover:text-[#0d7a70] transition-colors"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path></svg></button>
+                            <button class="hover:text-[#0d7a70] transition-colors"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg></button>
                         </div>
                     </div>
                 </div>
             </div>
-
-            {{-- Artikel & Panduan Edukatif --}}
-            <div class="space-y-6">
-                <h3 class="text-lg font-bold text-slate-800 flex items-center">
-                    <svg class="w-5 h-5 mr-2 text-[#0d7a70]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-                    </svg>
-                    Artikel Edukasi Pilihan
-                </h3>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {{-- Card Artikel 1 --}}
-                    <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all group flex flex-col justify-between">
-                        <div>
-                            <span class="text-[10px] font-bold text-[#0d7a70] bg-[#f0f9fa] px-2.5 py-1 rounded-full uppercase tracking-wider">Self-Care</span>
-                            <h4 class="text-base font-bold text-slate-800 mt-3 group-hover:text-[#0d7a70] transition-colors">Cara Praktis Mengelola Stres Akademik</h4>
-                            <p class="text-slate-500 text-xs mt-2 leading-relaxed">Stres akibat tugas dan ujian adalah hal biasa bagi mahasiswa. Simak 5 langkah terbukti untuk mengorganisir jadwal belajar...</p>
-                        </div>
-                        <a href="#" class="text-xs font-semibold text-[#0d7a70] hover:underline mt-4 flex items-center">
-                            Baca Selengkapnya
-                            <svg class="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                        </a>
-                    </div>
-
-                    {{-- Card Artikel 2 --}}
-                    <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all group flex flex-col justify-between">
-                        <div>
-                            <span class="text-[10px] font-bold text-purple-600 bg-purple-50 px-2.5 py-1 rounded-full uppercase tracking-wider">Mindfulness</span>
-                            <h4 class="text-base font-bold text-slate-800 mt-3 group-hover:text-purple-600 transition-colors">Melatih Kehadiran Diri dengan Meditasi</h4>
-                            <p class="text-slate-500 text-xs mt-2 leading-relaxed">Menjaga fokus pada saat ini (mindfulness) membantu meredakan overthinking dan kecemasan tentang masa depan...</p>
-                        </div>
-                        <a href="#" class="text-xs font-semibold text-[#0d7a70] hover:underline mt-4 flex items-center">
-                            Baca Selengkapnya
-                            <svg class="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                        </a>
-                    </div>
-                </div>
+        @empty
+            <div class="col-span-full py-12 text-center bg-white border border-slate-100 rounded-[2rem]">
+                <svg class="w-12 h-12 text-slate-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+                </svg>
+                <p class="text-slate-500 font-medium">Belum ada resource atau artikel yang tersedia saat ini.</p>
             </div>
+        @endforelse
+    </div>
+
+    {{-- Pagination --}}
+    @if($articles->hasPages())
+        <div class="mt-8">
+            {{ $articles->links() }}
         </div>
-
-        {{-- Kolom Kanan: Bantuan Profesional & Helpline Darurat --}}
-        <div class="space-y-8">
-            {{-- Layanan Konseling & Helpline --}}
-            <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm">
-                <h3 class="text-lg font-bold text-slate-800 mb-2 flex items-center">
-                    <svg class="w-5 h-5 mr-2 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                    </svg>
-                    Bantuan & Kontak Darurat
-                </h3>
-                <p class="text-slate-400 text-xs mb-6">Jika Anda atau seseorang yang Anda kenal membutuhkan bantuan segera, hubungi layanan berikut.</p>
-                
-                <div class="space-y-4">
-                    {{-- Layanan 1 --}}
-                    <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                        <h4 class="text-xs font-bold text-slate-700">Layanan Konseling Kampus</h4>
-                        <p class="text-[11px] text-slate-500 mt-0.5">Senin - Jumat, 08:00 - 16:00 WIB</p>
-                        <div class="flex items-center justify-between mt-3 pt-3 border-t border-slate-200/60">
-                            <span class="text-xs font-semibold text-slate-800">Gedung Pusat Mahasiswa Lt. 2</span>
-                            <a href="tel:0211234567" class="text-xs font-bold text-[#0d7a70] hover:underline flex items-center">
-                                Hubungi
-                            </a>
-                        </div>
-                    </div>
-
-                    {{-- Layanan 2 --}}
-                    <div class="p-4 bg-rose-50/50 rounded-2xl border border-rose-100/50">
-                        <h4 class="text-xs font-bold text-rose-700">Kementerian Kesehatan (Sejiwa)</h4>
-                        <p class="text-[11px] text-slate-500 mt-0.5">Layanan Kesehatan Jiwa Nasional Kemenkes</p>
-                        <div class="flex items-center justify-between mt-3 pt-3 border-t border-rose-100">
-                            <span class="text-xs font-bold text-rose-600">Hotline 119 (Ext. 8)</span>
-                            <a href="tel:119" class="text-xs font-bold text-rose-700 hover:underline flex items-center">
-                                Hubungi
-                            </a>
-                        </div>
-                    </div>
-
-                    {{-- Layanan 3 --}}
-                    <div class="p-4 bg-amber-50/40 rounded-2xl border border-amber-100/40">
-                        <h4 class="text-xs font-bold text-amber-800">Into The Light Indonesia</h4>
-                        <p class="text-[11px] text-slate-500 mt-0.5">Komunitas Pencegahan Bunuh Diri & Konseling</p>
-                        <div class="flex items-center justify-between mt-3 pt-3 border-t border-amber-100/60">
-                            <span class="text-xs font-semibold text-slate-700">intothelightid.org</span>
-                            <a href="https://www.intothelightid.org" target="_blank" class="text-xs font-bold text-amber-800 hover:underline flex items-center">
-                                Kunjungi
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {{-- Tips Jurnal Harian Pendukung --}}
-            <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col justify-between min-h-[160px]">
-                <div>
-                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 block">Kata Bijak Hari Ini</h4>
-                    <p class="text-sm italic text-slate-600 leading-relaxed">"Merawat kesehatan mental Anda bukanlah tindakan egois, melainkan pondasi untuk bisa bertumbuh dan menolong sesama."</p>
-                </div>
-                <div class="text-[10px] text-slate-400 font-medium pt-4 border-t border-slate-50">
-                    DepreSense Digital Sanctuary
-                </div>
-            </div>
+    @endif
+    
+    {{-- Quote Section --}}
+    <div class="mt-12 bg-white rounded-3xl border border-slate-100 p-8 flex items-start space-x-6 relative overflow-hidden">
+        <div class="absolute right-0 top-0 opacity-[0.03] text-[#0d7a70] -mt-10 -mr-10">
+            <svg class="w-64 h-64" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
         </div>
-
+        <div class="bg-[#f0f9fa] text-[#0d7a70] rounded-full p-4 flex-shrink-0 z-10">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 18L14.017 10.609C14.017 4.905 17.748 1.039 23 0L23.995 2.151C21.563 3.068 20 5.789 20 8H24V18H14.017ZM0 18V10.609C0 4.905 3.748 1.039 9 0L9.996 2.151C7.563 3.068 6 5.789 6 8H9.983L9.983 18L0 18Z"/></svg>
+        </div>
+        <div class="z-10">
+            <p class="text-slate-600 font-medium italic text-lg leading-relaxed max-w-3xl mb-4">
+                "Kesehatan mentalmu adalah prioritas. Istirahat sejenak bukanlah tanda kelemahan, melainkan bagian dari kekuatan untuk terus melangkah."
+            </p>
+            <p class="text-sm font-bold text-slate-800">— Pengingat Hari Ini</p>
+        </div>
     </div>
 </x-app-layout>

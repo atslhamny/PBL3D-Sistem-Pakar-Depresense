@@ -52,7 +52,7 @@
                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
                     </svg>
-                    Assessment
+                    Skrining
                 </a>
 
                 <a href="{{ route('user.resource') }}" 
@@ -60,7 +60,7 @@
                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
                     </svg>
-                    Resource
+                    Edukasi
                 </a>
 
                 <a href="{{ route('user.history') }}" 
@@ -68,7 +68,7 @@
                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
-                    History
+                    Riwayat
                 </a>
             </nav>
 
@@ -80,7 +80,7 @@
                          alt="Avatar">
                     <div class="ml-3 overflow-hidden flex-1">
                         <p class="text-sm font-bold text-slate-700 truncate">{{ Auth::user()->full_name }}</p>
-                        <p class="text-[11px] text-slate-400 font-medium truncate">Teknologi Informasi</p>
+                        <p class="text-[11px] text-slate-400 font-medium truncate">{{ Auth::user()->study_program ?? 'Program Studi' }}</p>
                     </div>
                     <svg class="w-4 h-4 text-slate-400 group-hover:text-slate-600 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
@@ -164,7 +164,7 @@
                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
                     </svg>
-                    Assessment
+                    Skrining
                 </a>
 
                 <a href="{{ route('user.resource') }}" 
@@ -172,7 +172,7 @@
                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
                     </svg>
-                    Resource
+                    Edukasi
                 </a>
 
                 <a href="{{ route('user.history') }}" 
@@ -180,7 +180,7 @@
                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
-                    History
+                    Riwayat
                 </a>
             </nav>
 
@@ -202,17 +202,43 @@
         <div class="flex-1 flex flex-col min-w-0 md:pl-64">
             
             {{-- HEADER NAVBAR --}}
-            <header class="h-16 bg-white/80 backdrop-blur-md flex items-center justify-between md:justify-end px-6 md:px-8 sticky top-0 z-10 border-b border-slate-100/50">
+            <header class="h-20 bg-white/80 backdrop-blur-md flex items-center justify-between px-6 md:px-8 sticky top-0 z-10 border-b border-slate-100/50">
                 
-                {{-- Hamburger Button (Mobile Only) --}}
-                <button @click="mobileSidebarOpen = true" class="p-2 -ml-2 rounded-xl text-slate-500 hover:bg-slate-50 md:hidden focus:outline-none transition-colors">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
-                </button>
+                <div class="flex items-center gap-4 flex-1">
+                    {{-- Hamburger Button (Mobile Only) --}}
+                    <button @click="mobileSidebarOpen = true" class="p-2 -ml-2 rounded-xl text-slate-500 hover:bg-slate-50 md:hidden focus:outline-none transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
 
-                {{-- User Dropdown Menu --}}
-                <div class="flex items-center space-x-4">
+                    {{-- Global Search --}}
+                    <div class="hidden md:flex relative flex-1 max-w-md">
+                        <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        <input type="text" placeholder="Cari artikel, video, atau panduan..." class="w-full bg-slate-50/50 border-transparent focus:border-slate-200 focus:bg-white focus:ring-0 rounded-full pl-11 pr-4 py-2.5 text-sm transition-all shadow-inner">
+                    </div>
+                </div>
+
+                {{-- User Actions --}}
+                <div class="flex items-center space-x-3 md:space-x-4">
+                    
+                    {{-- Notifications --}}
+                    <button class="p-2 text-slate-400 hover:text-[#0d7a70] hover:bg-slate-50 rounded-full transition-colors relative">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                        </svg>
+                        <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full border-2 border-white"></span>
+                    </button>
+
+                    {{-- Help --}}
+                    <a href="{{ route('user.resource') }}" class="p-2 text-slate-400 hover:text-[#0d7a70] hover:bg-slate-50 rounded-full transition-colors hidden sm:block">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </a>
+
                     <div class="h-6 w-px bg-slate-200 mx-1 hidden md:block"></div>
 
                     <div class="relative" x-data="{ open: false }" @click.away="open = false">

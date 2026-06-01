@@ -7,17 +7,30 @@ use Illuminate\Http\Request;
 
 class HistoryController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = auth()->user();
-        $sessions = $user->screeningSessions()->where('status', 'completed')->orderBy('completed_at', 'asc')->get();
         
-        $chartData = [
-            'labels' => $sessions->pluck('completed_at')->map(fn($date) => $date->format('d M Y'))->toArray(),
-            'scores' => $sessions->pluck('score_total')->toArray(),
-            'fuzzy_values' => $sessions->pluck('fuzzy_centroid_value')->toArray(),
-        ];
+        $query = $user->screeningSessions()
+            ->whereIn('status', ['completed', 'emergency_stopped'])
+            ->latest('completed_at');
+            
+        if ($request->filled('level') && $request->level !== 'Semua') {
+            $query->where('depression_level', strtolower($request->level));
+        }
 
-        return view('user.history', compact('sessions', 'chartData'));
+        $sessions = $query->paginate(10)->withQueryString();
+
+        return view('user.history', compact('sessions'));
+    }
+
+    public function show($id)
+    {
+        $user = auth()->user();
+        $session = $user->screeningSessions()
+            ->whereIn('status', ['completed', 'emergency_stopped'])
+            ->findOrFail($id);
+
+        return view('user.insight', compact('session'));
     }
 }

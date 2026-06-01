@@ -39,6 +39,7 @@ Route::prefix('screening')->name('screening.')->group(function () {
 Route::prefix('app')->name('user.')->middleware(['auth', 'role:user'])->group(function () {
     Route::get('dashboard', [UserDashboardController::class, 'index'])->name('dashboard');
     Route::get('history', [UserHistoryController::class, 'index'])->name('history');
+    Route::get('history/{id}', [UserHistoryController::class, 'show'])->name('history.show');
     Route::get('recommendation', [UserRecommendationController::class, 'index'])->name('recommendation');
     Route::get('resource', [UserResourceController::class, 'index'])->name('resource');
 });
