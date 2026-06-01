@@ -340,7 +340,7 @@
                     </a>
 
                     <!-- Tambah Artikel -->
-                    <a href="#" class="w-full flex items-center justify-center p-4 bg-[#e6f4f2] border border-[#d2ebe7] rounded-xl hover:bg-[#d8f0ec] hover:border-[#b8dfd8] text-[#0d7a70] hover:text-[#0b635b] font-bold text-sm transition-all shadow-sm cursor-not-allowed">
+                    <a href="{{ route('admin.articles.create') }}" class="w-full flex items-center justify-center p-4 bg-[#e6f4f2] border border-[#d2ebe7] rounded-xl hover:bg-[#d8f0ec] hover:border-[#b8dfd8] text-[#0d7a70] hover:text-[#0b635b] font-bold text-sm transition-all shadow-sm">
                         + Tambah Artikel
                     </a>
                 </div>

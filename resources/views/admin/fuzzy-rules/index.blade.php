@@ -1,4 +1,13 @@
 <x-admin-layout title="Manajemen Aturan (Sistem Pakar)">
+    <div x-data="{
+        showDetail: false,
+        selectedRule: null,
+        openDetail(rule) {
+            this.selectedRule = rule;
+            this.showDetail = true;
+        }
+    }" class="relative">
+
     <div class="mb-8">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
@@ -15,7 +24,7 @@
         </div>
     </div>
 
-    <!-- Alert Box Notifikasi Sukses -->
+    {{-- Alert Box Notifikasi Sukses --}}
     @if(session('success'))
     <div x-data="{ show: true }" x-show="show" x-transition class="mb-8 p-4 bg-emerald-50 border border-emerald-100 rounded-2xl flex items-center justify-between shadow-sm">
         <div class="flex items-center gap-3">
@@ -33,9 +42,8 @@
     </div>
     @endif
 
-    <!-- Metrics Cards -->
+    {{-- Metrics Cards --}}
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <!-- Total Aturan -->
         <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex items-center gap-5">
             <div class="p-4 bg-[#ecf5f4] rounded-2xl text-[#0d7a70]">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -48,7 +56,6 @@
             </div>
         </div>
 
-        <!-- Aturan Aktif -->
         <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex items-center gap-5">
             <div class="p-4 bg-emerald-50 rounded-2xl text-emerald-600">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -61,7 +68,6 @@
             </div>
         </div>
 
-        <!-- Aturan Non-aktif -->
         <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex items-center gap-5">
             <div class="p-4 bg-rose-50 rounded-2xl text-rose-500">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -75,7 +81,7 @@
         </div>
     </div>
 
-    <!-- Data Table Card -->
+    {{-- Data Table Card --}}
     <div class="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden mb-6">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
@@ -86,17 +92,16 @@
                         <th class="py-4 px-6">Keputusan Diagnostik (MAKA)</th>
                         <th class="py-4 px-6 w-24">Status</th>
                         <th class="py-4 px-6 w-28 text-center">Toggle Keaktifan</th>
+                        <th class="py-4 px-6 w-28 text-center">Detail</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 text-sm text-slate-700">
                     @forelse($rules as $rule)
                         <tr class="hover:bg-slate-50/50 transition-colors">
-                            <!-- Rule Number -->
                             <td class="py-5 px-6 font-black text-slate-800">
                                 R{{ sprintf('%03d', $rule->rule_number) }}
                             </td>
                             
-                            <!-- Antecedents (JIKA) -->
                             <td class="py-5 px-6">
                                 <div class="flex flex-wrap items-center gap-2">
                                     <div class="flex items-center gap-1.5 px-3 py-1 bg-slate-50 border border-slate-100 rounded-xl text-xs font-medium text-slate-600">
@@ -124,7 +129,6 @@
                                 </div>
                             </td>
                             
-                            <!-- Consequent (MAKA) -->
                             <td class="py-5 px-6">
                                 <span class="inline-flex items-center px-3 py-1 rounded-xl text-xs font-bold border uppercase tracking-wider
                                     {{ $rule->consequent->value === 'berat' ? 'bg-rose-50 text-rose-600 border-rose-100' : 
@@ -135,7 +139,6 @@
                                 </span>
                             </td>
 
-                            <!-- Status Badge -->
                             <td class="py-5 px-6">
                                 @if($rule->is_active)
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-lg text-[9px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-600 border border-emerald-100">Aktif</span>
@@ -144,7 +147,6 @@
                                 @endif
                             </td>
 
-                            <!-- Action Switch -->
                             <td class="py-5 px-6 text-center">
                                 <form action="{{ route('admin.fuzzy-rules.update', $rule->id) }}" method="POST" class="inline-block align-middle">
                                     @csrf
@@ -157,10 +159,18 @@
                                     </button>
                                 </form>
                             </td>
+
+                            <td class="py-5 px-6 text-center">
+                                <button @click="openDetail({{ json_encode(['id' => $rule->rule_number, 'is_active' => $rule->is_active, 'updated_at' => $rule->updated_at->format('d M Y'), 'antecedent_total' => $rule->antecedent_total->value, 'antecedent_cognitive' => $rule->antecedent_cognitive->value, 'antecedent_somatic' => $rule->antecedent_somatic->value, 'consequent' => $rule->consequent->value, 'description' => $rule->description]) }})"
+                                        class="inline-flex items-center px-3 py-1.5 text-xs font-bold text-slate-600 border border-slate-200 rounded-xl hover:bg-slate-100 transition-all">
+                                    <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                    Detail
+                                </button>
+                            </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="py-8 px-6 text-center text-slate-400 italic">
+                            <td colspan="6" class="py-8 px-6 text-center text-slate-400 italic">
                                 Belum ada aturan fuzzy yang tersedia.
                             </td>
                         </tr>
@@ -168,5 +178,159 @@
                 </tbody>
             </table>
         </div>
+    </div>
+
+    {{-- Detail Modal --}}
+    <div x-show="showDetail"
+         class="fixed inset-0 overflow-hidden z-50"
+         style="display:none;"
+         x-transition>
+        <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" @click="showDetail = false"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+            <div x-show="showDetail"
+                 x-transition:enter="transform transition ease-out duration-200"
+                 x-transition:enter-start="opacity-0 scale-95"
+                 x-transition:enter-end="opacity-100 scale-100"
+                 x-transition:leave="transform transition ease-in duration-150"
+                 x-transition:leave-start="opacity-100 scale-100"
+                 x-transition:leave-end="opacity-0 scale-95"
+                 class="bg-white rounded-[2rem] shadow-2xl w-full max-w-lg p-8 relative">
+
+                <div class="flex items-start justify-between mb-6">
+                    <div>
+                        <h3 class="text-lg font-black text-slate-800">Detail Aturan</h3>
+                        <p class="text-sm text-slate-400 mt-0.5" x-text="selectedRule ? 'R' + String(selectedRule.id).padStart(3, '0') : ''"></p>
+                    </div>
+                    <button @click="showDetail = false" class="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-xl transition-all">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+
+                <template x-if="selectedRule">
+                    <div class="space-y-5">
+                        {{-- Info Umum --}}
+                        <div>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Informasi Umum</p>
+                            <div class="grid grid-cols-3 gap-3 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                                <div>
+                                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">ID Aturan</p>
+                                    <p class="text-sm font-black text-slate-800" x-text="'R' + String(selectedRule.id).padStart(3, '0')"></p>
+                                </div>
+                                <div>
+                                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">Status</p>
+                                    <span class="inline-flex px-2.5 py-1 rounded-lg text-[9px] font-black uppercase border"
+                                          :class="selectedRule.is_active ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-slate-100 text-slate-500 border-slate-200'"
+                                          x-text="selectedRule.is_active ? 'Aktif' : 'Non-Aktif'"></span>
+                                </div>
+                                <div>
+                                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">Update Terakhir</p>
+                                    <p class="text-xs font-semibold text-slate-700" x-text="selectedRule.updated_at"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Kondisi JIKA --}}
+                        <div>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Kondisi (JIKA)</p>
+                            <div class="bg-slate-50 rounded-2xl border border-slate-100 p-4 space-y-2">
+                                <div class="p-3 bg-white border border-slate-200 rounded-xl flex justify-between items-center">
+                                    <span class="text-xs font-bold text-slate-500">Total Skor BDI</span>
+                                    <span class="inline-flex px-2.5 py-1 rounded-lg text-[9px] font-black uppercase border"
+                                          :class="{
+                                              'bg-rose-50 text-rose-700 border-rose-200': selectedRule.antecedent_total === 'berat',
+                                              'bg-amber-50 text-amber-700 border-amber-200': selectedRule.antecedent_total === 'sedang',
+                                              'bg-indigo-50 text-indigo-600 border-indigo-200': selectedRule.antecedent_total === 'ringan',
+                                              'bg-emerald-50 text-emerald-700 border-emerald-200': selectedRule.antecedent_total === 'minimal',
+                                          }"
+                                          x-text="selectedRule.antecedent_total.charAt(0).toUpperCase() + selectedRule.antecedent_total.slice(1)"></span>
+                                </div>
+                                <div class="text-center text-[9px] font-black text-slate-400 uppercase tracking-widest">DAN</div>
+                                <div class="p-3 bg-white border border-slate-200 rounded-xl flex justify-between items-center">
+                                    <span class="text-xs font-bold text-slate-500">Kognitif & Afektif</span>
+                                    <span class="inline-flex px-2.5 py-1 rounded-lg text-[9px] font-black uppercase border"
+                                          :class="{
+                                              'bg-rose-50 text-rose-700 border-rose-200': selectedRule.antecedent_cognitive === 'berat',
+                                              'bg-amber-50 text-amber-700 border-amber-200': selectedRule.antecedent_cognitive === 'sedang',
+                                              'bg-indigo-50 text-indigo-600 border-indigo-200': selectedRule.antecedent_cognitive === 'ringan',
+                                              'bg-emerald-50 text-emerald-700 border-emerald-200': selectedRule.antecedent_cognitive === 'minimal',
+                                          }"
+                                          x-text="selectedRule.antecedent_cognitive.charAt(0).toUpperCase() + selectedRule.antecedent_cognitive.slice(1)"></span>
+                                </div>
+                                <div class="text-center text-[9px] font-black text-slate-400 uppercase tracking-widest">DAN</div>
+                                <div class="p-3 bg-white border border-slate-200 rounded-xl flex justify-between items-center">
+                                    <span class="text-xs font-bold text-slate-500">Somatik (Fisik)</span>
+                                    <span class="inline-flex px-2.5 py-1 rounded-lg text-[9px] font-black uppercase border"
+                                          :class="{
+                                              'bg-rose-50 text-rose-700 border-rose-200': selectedRule.antecedent_somatic === 'berat',
+                                              'bg-amber-50 text-amber-700 border-amber-200': selectedRule.antecedent_somatic === 'sedang',
+                                              'bg-indigo-50 text-indigo-600 border-indigo-200': selectedRule.antecedent_somatic === 'ringan',
+                                              'bg-emerald-50 text-emerald-700 border-emerald-200': selectedRule.antecedent_somatic === 'minimal',
+                                          }"
+                                          x-text="selectedRule.antecedent_somatic.charAt(0).toUpperCase() + selectedRule.antecedent_somatic.slice(1)"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Kesimpulan MAKA --}}
+                        <div>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Kesimpulan (MAKA)</p>
+                            <div class="p-4 rounded-2xl border flex items-center justify-between"
+                                 :class="{
+                                     'bg-rose-50 border-rose-200': selectedRule.consequent === 'berat',
+                                     'bg-amber-50 border-amber-200': selectedRule.consequent === 'sedang',
+                                     'bg-indigo-50 border-indigo-200': selectedRule.consequent === 'ringan',
+                                     'bg-emerald-50 border-emerald-200': selectedRule.consequent === 'minimal',
+                                 }">
+                                <div class="flex items-center gap-3">
+                                    <div class="p-2 rounded-xl"
+                                         :class="{
+                                             'bg-rose-100 text-rose-600': selectedRule.consequent === 'berat',
+                                             'bg-amber-100 text-amber-600': selectedRule.consequent === 'sedang',
+                                             'bg-indigo-100 text-indigo-600': selectedRule.consequent === 'ringan',
+                                             'bg-emerald-100 text-emerald-600': selectedRule.consequent === 'minimal',
+                                         }">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    </div>
+                                    <span class="font-black text-base"
+                                          :class="{
+                                              'text-rose-700': selectedRule.consequent === 'berat',
+                                              'text-amber-700': selectedRule.consequent === 'sedang',
+                                              'text-indigo-700': selectedRule.consequent === 'ringan',
+                                              'text-emerald-700': selectedRule.consequent === 'minimal',
+                                          }"
+                                          x-text="'Depresi ' + selectedRule.consequent.charAt(0).toUpperCase() + selectedRule.consequent.slice(1)"></span>
+                                </div>
+                                <span class="text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-lg border bg-white/60"
+                                      :class="{
+                                          'text-rose-600 border-rose-200': selectedRule.consequent === 'berat',
+                                          'text-amber-600 border-amber-200': selectedRule.consequent === 'sedang',
+                                          'text-indigo-600 border-indigo-200': selectedRule.consequent === 'ringan',
+                                          'text-emerald-600 border-emerald-200': selectedRule.consequent === 'minimal',
+                                      }">Diagnosis</span>
+                            </div>
+                        </div>
+
+                        {{-- Deskripsi --}}
+                        <template x-if="selectedRule.description">
+                            <div>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Catatan Administratif</p>
+                                <div class="p-4 bg-slate-50 border border-slate-100 rounded-2xl">
+                                    <p class="text-xs text-slate-600 leading-relaxed italic" x-text="selectedRule.description"></p>
+                                </div>
+                            </div>
+                        </template>
+
+                        <div class="pt-2">
+                            <button @click="showDetail = false"
+                                    class="w-full py-3 bg-slate-100 text-slate-600 font-bold text-sm rounded-xl hover:bg-slate-200 transition-colors">
+                                Tutup
+                            </button>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </div>
+
     </div>
 </x-admin-layout>

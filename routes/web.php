@@ -17,6 +17,8 @@ use App\Http\Controllers\Admin\QuestionController as AdminQuestionController;
 use App\Http\Controllers\Admin\FuzzyRuleController as AdminFuzzyRuleController;
 use App\Http\Controllers\Admin\FuzzyMembershipController as AdminFuzzyMembershipController;
 use App\Http\Controllers\Admin\AuditLogController as AdminAuditLogController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\Admin\ArticleController as AdminArticleController;
 
 Route::get('/', [GuestController::class, 'index'])->name('home');
 
@@ -50,6 +52,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin', 'audit
     Route::resource('fuzzy-rules', AdminFuzzyRuleController::class);
     Route::resource('fuzzy-memberships', AdminFuzzyMembershipController::class);
     Route::get('audit-logs', [AdminAuditLogController::class, 'index'])->name('audit-logs.index');
+    Route::get('users', [AdminUserController::class, 'index'])->name('users.index');
+    Route::get('users/{user}', [AdminUserController::class, 'show'])->name('users.show');
+    Route::resource('articles', AdminArticleController::class);
 });
 
 Route::get('/dashboard', function () {

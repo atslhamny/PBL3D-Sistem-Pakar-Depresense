@@ -115,7 +115,7 @@
             <p class="text-xs text-slate-400 mb-6">Grafik fluktuasi tingkat indikasi stres Anda</p>
             
             <div class="h-48 w-full bg-slate-50/50 rounded-xl flex items-center justify-center border border-dashed border-slate-200">
-                <span class="text-xs text-slate-400 italic">Visualisasi data grafik riwayat (ChartJS) akan dimuat di sini</span>
+                <span class="text-xs text-slate-400 italic">Visualisasi data grafik riwayat akan dimuat di sini</span>
             </div>
         </div>
 
