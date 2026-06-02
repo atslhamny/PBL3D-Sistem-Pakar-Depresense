@@ -149,15 +149,16 @@
                         <p class="text-xs text-slate-400 mt-0.5">Grafik Garis: Tren Ringan, Sedang, Berat</p>
                     </div>
                     <div x-data="{ open: false }" class="relative print:hidden">
-                        <button @click="open = !open" class="flex items-center px-3 py-1.5 bg-slate-50 border border-slate-150 text-slate-500 text-xs font-bold rounded-xl hover:bg-slate-100 transition-colors focus:outline-none">
-                            7 Hari
-                            <svg class="w-3.5 h-3.5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <button @click="open = !open" class="flex items-center px-4 py-2 bg-slate-50 border border-slate-200 text-slate-600 text-xs font-bold rounded-xl hover:bg-slate-100 transition-colors focus:outline-none shadow-sm">
+                            {{ $filter }} Hari
+                            <svg class="w-3.5 h-3.5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                             </svg>
                         </button>
-                        <div x-show="open" @click.away="open = false" x-transition class="absolute right-0 mt-1 w-28 bg-white border border-slate-100 rounded-xl shadow-lg z-50 py-1" style="display: none;">
-                            <button class="w-full text-left px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-50 font-semibold">7 Hari</button>
-                            <button class="w-full text-left px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-50 font-semibold">30 Hari</button>
+                        <div x-show="open" @click.away="open = false" x-transition class="absolute right-0 mt-2 w-32 bg-white border border-slate-100 rounded-xl shadow-lg z-50 py-1" style="display: none;">
+                            <a href="{{ route('admin.dashboard', ['filter' => 7]) }}" class="block w-full text-left px-4 py-2 text-xs text-slate-600 hover:bg-slate-50 font-semibold {{ $filter == 7 ? 'text-[#0d7a70] bg-[#ecf5f4]' : '' }}">7 Hari</a>
+                            <a href="{{ route('admin.dashboard', ['filter' => 14]) }}" class="block w-full text-left px-4 py-2 text-xs text-slate-600 hover:bg-slate-50 font-semibold {{ $filter == 14 ? 'text-[#0d7a70] bg-[#ecf5f4]' : '' }}">14 Hari</a>
+                            <a href="{{ route('admin.dashboard', ['filter' => 30]) }}" class="block w-full text-left px-4 py-2 text-xs text-slate-600 hover:bg-slate-50 font-semibold {{ $filter == 30 ? 'text-[#0d7a70] bg-[#ecf5f4]' : '' }}">30 Hari</a>
                         </div>
                     </div>
                 </div>
@@ -207,20 +208,20 @@
                     <p class="text-xs text-slate-400 mt-0.5">Analisis instan sistem diagnosis</p>
                 </div>
                 
-                <div class="my-6 space-y-4">
+                <div class="my-6 space-y-3">
                     <!-- Bar 1 (White rounded bar matching screenshot) -->
-                    <div class="bg-white border border-slate-200/60 p-4.5 rounded-xl shadow-sm text-xs font-semibold text-slate-700">
-                        Mayoritas pengguna mengalami gejala utama pada kategori <span class="text-[#0d7a70] font-black">emosi</span>.
+                    <div class="bg-white border border-slate-200/60 px-5 py-3.5 rounded-2xl shadow-sm text-sm font-medium text-slate-700 w-full">
+                        Mayoritas pengguna mengalami gejala utama pada kategori <span class="text-[#0d7a70] font-bold">emosi</span>.
                     </div>
                     
                     <!-- Bar 2 (Soft light yellow rounded bar matching screenshot) -->
-                    <div class="bg-[#fffcf4] border border-[#f1e7bc]/60 p-4.5 rounded-xl shadow-sm text-xs font-semibold text-slate-700">
-                        Terjadi <span class="text-[#b91c1c] font-black">peningkatan</span> pada kategori tingkat depresi sedang.
+                    <div class="bg-[#fffcf4] border border-[#f1e7bc]/60 px-5 py-3.5 rounded-2xl shadow-sm text-sm font-medium text-slate-700 w-full">
+                        Terjadi <span class="text-[#b91c1c] font-bold">peningkatan</span> pada kategori tingkat depresi sedang.
                     </div>
                 </div>
 
-                <div class="text-[10px] text-slate-400 font-extrabold uppercase tracking-widest">
-                    Rekomendasi tindakan terkirim otomatis
+                <div class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-2">
+                    REKOMENDASI TINDAKAN TERKIRIM OTOMATIS
                 </div>
             </div>
 
@@ -238,7 +239,7 @@
                     <table class="w-full text-left border-collapse">
                         <thead>
                             <tr class="border-b border-slate-100 text-slate-400 text-[10px] font-bold uppercase tracking-wider">
-                                <th class="pb-3 text-slate-400 font-bold">NAMA/NIM</th>
+                                <th class="pb-3 text-slate-400 font-bold">NAMA/UNIVERSITAS</th>
                                 <th class="pb-3 text-slate-400 font-bold">SKOR TERAKHIR</th>
                                 <th class="pb-3 text-slate-400 font-bold w-36 text-right">STATUS</th>
                             </tr>
@@ -254,7 +255,7 @@
                                             </div>
                                             <div class="flex flex-col">
                                                 <span class="font-bold text-slate-800 text-sm">{{ $user['name'] }}</span>
-                                                <span class="text-[10px] text-slate-400 mt-0.5 font-semibold">{{ $user['nim'] }}</span>
+                                                <span class="text-[10px] text-slate-400 mt-0.5 font-semibold">{{ $user['university'] }}</span>
                                             </div>
                                         </div>
                                     </td>

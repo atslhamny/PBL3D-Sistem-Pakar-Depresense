@@ -51,28 +51,36 @@ class DashboardController extends Controller
             ]
         ];
         
+        $filter = (int) request()->query('filter', 7);
+        if (!in_array($filter, [7, 14, 30])) {
+            $filter = 7;
+        }
+
         // 4. Tren Chart Data (Line Chart) - 100% connected to DB
         $trendData = [
             'labels' => [],
-            'ringan' => array_fill(0, 7, 0),
-            'sedang' => array_fill(0, 7, 0),
-            'berat' => array_fill(0, 7, 0)
+            'ringan' => array_fill(0, $filter, 0),
+            'sedang' => array_fill(0, $filter, 0),
+            'berat' => array_fill(0, $filter, 0)
         ];
 
-        // Generate Indonesian day names for the last 7 days
-        for ($i = 6; $i >= 0; $i--) {
+        // Generate Indonesian day names/dates for the last $filter days
+        for ($i = $filter - 1; $i >= 0; $i--) {
             $date = now()->subDays($i);
-            $dayName = $date->locale('id')->dayName;
-            $trendData['labels'][] = ucfirst($dayName);
+            if ($filter === 7) {
+                $trendData['labels'][] = ucfirst($date->locale('id')->dayName);
+            } else {
+                $trendData['labels'][] = $date->format('d M');
+            }
         }
 
-        // Query real database records from the last 7 days and add them to the trend data
-        $sessionsLast7Days = ScreeningSession::where('created_at', '>=', now()->subDays(6)->startOfDay())
+        // Query real database records from the last $filter days and add them to the trend data
+        $sessionsLastXDays = ScreeningSession::where('created_at', '>=', now()->subDays($filter - 1)->startOfDay())
             ->get();
 
-        foreach ($sessionsLast7Days as $session) {
-            $dayIndex = 6 - now()->diffInDays($session->created_at);
-            if ($dayIndex >= 0 && $dayIndex <= 6) {
+        foreach ($sessionsLastXDays as $session) {
+            $dayIndex = ($filter - 1) - now()->startOfDay()->diffInDays($session->created_at->startOfDay());
+            if ($dayIndex >= 0 && $dayIndex < $filter) {
                 if ($session->status === \App\Enums\SessionStatus::EmergencyStopped || $session->depression_level === \App\Enums\DepressionLevel::Berat) {
                     $trendData['berat'][$dayIndex]++;
                 } elseif ($session->depression_level === \App\Enums\DepressionLevel::Sedang) {
@@ -97,7 +105,7 @@ class DashboardController extends Controller
                 $scoreStr = $session->score_total !== null ? $session->score_total : 'Kritis';
                 return [
                     'name' => $session->user->name ?? 'Pengguna Anonim',
-                    'nim' => $session->user->nim ?? 'NIM tidak diset',
+                    'university' => $session->user->university ?? 'Universitas tidak diset',
                     'score' => $scoreStr,
                     'level' => $levelStr,
                     'status' => $session->status === \App\Enums\SessionStatus::EmergencyStopped ? 'Memburuk' : ($session->score_total > 15 ? 'Meningkat' : 'Stabil')
@@ -117,7 +125,7 @@ class DashboardController extends Controller
                 ];
             });
 
-        return view('admin.dashboard', compact('stats', 'chartData', 'trendData', 'attentionUsers', 'recentActivities'));
+        return view('admin.dashboard', compact('stats', 'chartData', 'trendData', 'attentionUsers', 'recentActivities', 'filter'));
     }
 
     public function downloadExcel()
