@@ -26,17 +26,19 @@
         </div>
 
         <form @submit.prevent="submitAnswer" class="space-y-4">
-            <template x-for="(option, index) in options" :key="index">
+            <template x-for="(option, index) in options" :key="option.value">
                 <label
                     class="flex items-start gap-4 rounded-2xl border-2 p-5 cursor-pointer transition-all duration-200"
-                    :class="selected === index
+                    {{-- PERBAIKAN 1: Cek kecocokan berdasarkan option.value, bukan index visual --}}
+                    :class="selected === option.value
                         ? 'border-[#00aba9] bg-[#f0fdfa] shadow-sm shadow-teal-50'
                         : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50'"
                 >
                     <input
                         type="radio"
                         name="answer_value"
-                        :value="index"
+                        {{-- PERBAIKAN 2: Ikat value input ke nilai asli backend (option.value) --}}
+                        :value="option.value"
                         x-model="selected"
                         class="mt-1 w-5 h-5 accent-[#00aba9] cursor-pointer flex-shrink-0"
                     >
@@ -44,7 +46,8 @@
                     <div class="flex flex-col">
                         <span
                             class="text-base leading-snug font-semibold transition-colors duration-200"
-                            :class="selected === index ? 'text-[#0d7a70]' : 'text-slate-700'"
+                            {{-- PERBAIKAN 3: Cek kecocokan warna teks berdasarkan option.value --}}
+                            :class="selected === option.value ? 'text-[#0d7a70]' : 'text-slate-700'"
                             x-text="option.text"
                         ></span>
                     </div>
@@ -99,16 +102,13 @@
                 options: [],
 
                 init() {
-                    // 1. Petakan teks jawaban ke indeks aslinya (agar nilai backend tidak rusak)
                     let mappedOptions = answerOptions.map((text, i) => ({ text: text, value: i }));
                     
-                    // 2. Acak susunan array menggunakan Algoritma Fisher-Yates
                     for (let i = mappedOptions.length - 1; i > 0; i--) {
                         const j = Math.floor(Math.random() * (i + 1));
                         [mappedOptions[i], mappedOptions[j]] = [mappedOptions[j], mappedOptions[i]];
                     }
                     
-                    // 3. Masukkan hasil acakan ke properti options Alpine
                     this.options = mappedOptions;
                 },
 
@@ -128,7 +128,7 @@
                             body: JSON.stringify({
                                 question_id: this.questionId,
                                 item_number: this.itemNumber,
-                                // x-model="selected" akan otomatis mengambil properti .value dari opsi yang dipilih
+                                // PERBAIKAN 4: Sekarang `this.selected` sudah murni berisi nilai `option.value` asli backend
                                 answer_value: this.selected 
                             })
                         });
