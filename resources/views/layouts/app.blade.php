@@ -211,34 +211,11 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                         </svg>
                     </button>
-
-                    {{-- Global Search --}}
-                    <div class="hidden md:flex relative flex-1 max-w-md">
-                        <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                        </svg>
-                        <input type="text" placeholder="Cari artikel, video, atau panduan..." class="w-full bg-slate-50/50 border-transparent focus:border-slate-200 focus:bg-white focus:ring-0 rounded-full pl-11 pr-4 py-2.5 text-sm transition-all shadow-inner">
-                    </div>
                 </div>
 
                 {{-- User Actions --}}
                 <div class="flex items-center space-x-3 md:space-x-4">
                     
-                    {{-- Notifications --}}
-                    <button class="p-2 text-slate-400 hover:text-[#0d7a70] hover:bg-slate-50 rounded-full transition-colors relative">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
-                        </svg>
-                        <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full border-2 border-white"></span>
-                    </button>
-
-                    {{-- Help --}}
-                    <a href="{{ route('user.resource') }}" class="p-2 text-slate-400 hover:text-[#0d7a70] hover:bg-slate-50 rounded-full transition-colors hidden sm:block">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                    </a>
-
                     <div class="h-6 w-px bg-slate-200 mx-1 hidden md:block"></div>
 
                     <div class="relative" x-data="{ open: false }" @click.away="open = false">

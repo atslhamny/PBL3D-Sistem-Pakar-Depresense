@@ -13,6 +13,7 @@ class ScreeningController extends Controller
     {
         $session = $request->active_session;
 
+        // Legacy support: old sessions that were hard-stopped go to emergency page
         if ($session->status === SessionStatus::EmergencyStopped) {
             return redirect()->route('screening.emergency');
         }
@@ -24,7 +25,7 @@ class ScreeningController extends Controller
         $nextQuestion = $service->getNextQuestion($session);
 
         if (!$nextQuestion) {
-            // All questions answered
+            // All questions answered — complete and show result
             $service->completeSession($session);
             return redirect()->route('screening.result');
         }

@@ -56,7 +56,7 @@
                                 }
                             }
                             
-                            $levelStyles = match($session->depression_level->value) {
+                            $levelStyles = match($session->depression_level?->value) {
                                 'minimal' => 'bg-emerald-50 text-emerald-600',
                                 'ringan'  => 'bg-[#e6f4f2] text-[#0d7a70]',
                                 'sedang'  => 'bg-indigo-50 text-indigo-600',
@@ -78,7 +78,7 @@
                             </td>
                             <td class="p-6">
                                 <span class="inline-flex px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest {{ $levelStyles }}">
-                                    {{ $session->depression_level->value }}
+                                    {{ $session->depression_level?->value ?? 'Darurat' }}
                                 </span>
                             </td>
                             <td class="p-6 text-right">

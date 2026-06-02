@@ -8,7 +8,7 @@
         <p class="mb-4 text-base font-semibold text-[#0d7a70]">Selamat datang di DepreSense.</p>
         
         <p class="mb-4 leading-relaxed text-xs">
-            Kuesioner ini dirancang menggunakan instrumen <strong>BDI-II (Beck Depression Inventory-II)</strong> untuk mendeteksi secara dini indikasi depresi. Sistem ini menggunakan kecerdasan buatan berbasis <strong>Fuzzy Mamdani</strong> untuk menganalisis jawaban Anda.
+            Kuesioner ini dirancang menggunakan instrumen <strong>BDI-II (Beck Depression Inventory-II)</strong> untuk mendeteksi secara dini indikasi depresi. Sistem ini menggunakan <strong>algoritma analisis terstruktur</strong> untuk memproses jawaban Anda.
         </p>
 
         <ul class="list-disc pl-5 mb-4 space-y-2 text-xs leading-relaxed">

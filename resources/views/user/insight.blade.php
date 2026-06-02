@@ -73,10 +73,10 @@
                     </div>
                 </div>
 
-                {{-- Nilai Fuzzy --}}
+                {{-- Nilai Analisis --}}
                 <div>
                     <div class="flex justify-between items-end mb-2">
-                        <span class="text-sm font-bold text-slate-700">Fuzzy Logic Value</span>
+                        <span class="text-sm font-bold text-slate-700">Indeks Keparahan (0-100)</span>
                         <span class="text-sm font-extrabold text-[#377b75]">{{ $pctFuzzy }}%</span>
                     </div>
                     <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
@@ -151,7 +151,7 @@
             </p>
         </div>
 
-        {{-- Fuzzy Logic Status --}}
+        {{-- Expert System Status --}}
         <div class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
             <div class="flex items-center mb-4">
                 <div class="w-8 h-8 rounded-full bg-teal-50 text-teal-600 flex items-center justify-center mr-3">
@@ -160,7 +160,7 @@
                 <h4 class="font-bold text-slate-800">Sistem Pakar</h4>
             </div>
             <p class="text-sm text-slate-500 leading-relaxed">
-                Inferensi Fuzzy Mamdani menyimpulkan hasil pada nilai <strong>{{ $session->fuzzy_centroid_value }}</strong>. Kategori ini termasuk dalam himpunan keanggotaan <strong>{{ strtoupper($session->depression_level->value) }}</strong>.
+                Berdasarkan analisis sistem terhadap pola jawaban Anda, tingkat keparahan kondisi Anda berada pada skor <strong>{{ $session->fuzzy_centroid_value }}</strong>. Hasil ini menempatkan Anda pada kategori indikasi <strong>{{ strtoupper($session->depression_level?->value ?? 'N/A') }}</strong>.
             </p>
         </div>
         
