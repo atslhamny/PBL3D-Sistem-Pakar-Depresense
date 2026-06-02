@@ -117,10 +117,7 @@
                 <h4 class="text-sm font-bold text-slate-800 mb-1">Tren Skor Skrining</h4>
                 <p class="text-xs text-slate-400 mb-5">5 sesi skrining terakhir</p>
                 <div class="relative h-48">
-                    <canvas id="scoreChart"
-                        data-labels="{{ json_encode($chartLabels) }}"
-                        data-scores="{{ json_encode($chartScores) }}">
-                    </canvas>
+                    <canvas id="scoreChart"></canvas>
                 </div>
             </div>
             @endif
@@ -217,10 +214,10 @@
             new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: JSON.parse(ctx.getAttribute('data-labels')),
+                    labels: @json($chartLabels),
                     datasets: [{
                         label: 'Skor Total',
-                        data: JSON.parse(ctx.getAttribute('data-scores')),
+                        data: @json($chartScores),
                         borderColor: '#0d7a70',
                         backgroundColor: 'rgba(13,122,112,0.06)',
                         borderWidth: 3,

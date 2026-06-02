@@ -15,11 +15,17 @@
                 <p class="text-slate-500 text-sm mt-1">Kelola logika inferensi fuzzy "JIKA... MAKA..." untuk diagnosis tingkat depresi secara dinamis.</p>
             </div>
             
-            <div class="flex items-center gap-3">
-                <span class="text-xs font-semibold text-slate-400">Terakhir Diperbarui:</span>
-                <span class="px-3 py-1.5 bg-slate-100 text-slate-600 text-xs font-bold rounded-xl border border-slate-200">
-                    {{ \App\Models\FuzzyRule::max('updated_at') ? \Carbon\Carbon::parse(\App\Models\FuzzyRule::max('updated_at'))->diffForHumans() : 'Belum diperbarui' }}
-                </span>
+            <div class="flex flex-col items-end gap-3">
+                <a href="{{ route('admin.fuzzy-rules.create') }}" class="inline-flex items-center px-4 py-2 bg-[#0d7a70] text-white text-sm font-semibold rounded-xl hover:bg-[#0a635b] transition-colors shadow-sm">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    Tambah Aturan
+                </a>
+                <div class="flex items-center gap-3">
+                    <span class="text-xs font-semibold text-slate-400">Terakhir Diperbarui:</span>
+                    <span class="px-3 py-1.5 bg-slate-100 text-slate-600 text-xs font-bold rounded-xl border border-slate-200">
+                        {{ \App\Models\FuzzyRule::max('updated_at') ? \Carbon\Carbon::parse(\App\Models\FuzzyRule::max('updated_at'))->diffForHumans() : 'Belum diperbarui' }}
+                    </span>
+                </div>
             </div>
         </div>
     </div>
@@ -106,24 +112,24 @@
                                 <div class="flex flex-wrap items-center gap-2">
                                     <div class="flex items-center gap-1.5 px-3 py-1 bg-slate-50 border border-slate-100 rounded-xl text-xs font-medium text-slate-600">
                                         <span class="text-[9px] font-bold uppercase tracking-wider text-slate-400">Total BDI:</span>
-                                        <span class="font-bold {{ $rule->antecedent_total->value === 'berat' ? 'text-rose-500' : ($rule->antecedent_total->value === 'sedang' ? 'text-amber-500' : ($rule->antecedent_total->value === 'ringan' ? 'text-indigo-500' : 'text-emerald-500')) }}">
-                                            {{ ucfirst($rule->antecedent_total->value) }}
+                                        <span class="font-bold {{ $rule->antecedent_total?->value === 'berat' ? 'text-rose-500' : ($rule->antecedent_total?->value === 'sedang' ? 'text-amber-500' : ($rule->antecedent_total?->value === 'ringan' ? 'text-indigo-500' : ($rule->antecedent_total?->value === 'minimal' ? 'text-emerald-500' : 'text-slate-500'))) }}">
+                                            {{ $rule->antecedent_total ? ucfirst($rule->antecedent_total->value) : 'Any' }}
                                         </span>
                                     </div>
                                     <span class="text-[9px] font-black text-slate-300">AND</span>
                                     
                                     <div class="flex items-center gap-1.5 px-3 py-1 bg-slate-50 border border-slate-100 rounded-xl text-xs font-medium text-slate-600">
                                         <span class="text-[9px] font-bold uppercase tracking-wider text-slate-400">Kognitif-Afektif:</span>
-                                        <span class="font-bold {{ $rule->antecedent_cognitive->value === 'berat' ? 'text-rose-500' : ($rule->antecedent_cognitive->value === 'sedang' ? 'text-amber-500' : ($rule->antecedent_cognitive->value === 'ringan' ? 'text-indigo-500' : 'text-emerald-500')) }}">
-                                            {{ ucfirst($rule->antecedent_cognitive->value) }}
+                                        <span class="font-bold {{ $rule->antecedent_cognitive?->value === 'berat' ? 'text-rose-500' : ($rule->antecedent_cognitive?->value === 'sedang' ? 'text-amber-500' : ($rule->antecedent_cognitive?->value === 'ringan' ? 'text-indigo-500' : ($rule->antecedent_cognitive?->value === 'minimal' ? 'text-emerald-500' : 'text-slate-500'))) }}">
+                                            {{ $rule->antecedent_cognitive ? ucfirst($rule->antecedent_cognitive->value) : 'Any' }}
                                         </span>
                                     </div>
                                     <span class="text-[9px] font-black text-slate-300">AND</span>
 
                                     <div class="flex items-center gap-1.5 px-3 py-1 bg-slate-50 border border-slate-100 rounded-xl text-xs font-medium text-slate-600">
                                         <span class="text-[9px] font-bold uppercase tracking-wider text-slate-400">Somatik:</span>
-                                        <span class="font-bold {{ $rule->antecedent_somatic->value === 'berat' ? 'text-rose-500' : ($rule->antecedent_somatic->value === 'sedang' ? 'text-amber-500' : ($rule->antecedent_somatic->value === 'ringan' ? 'text-indigo-500' : 'text-emerald-500')) }}">
-                                            {{ ucfirst($rule->antecedent_somatic->value) }}
+                                        <span class="font-bold {{ $rule->antecedent_somatic?->value === 'berat' ? 'text-rose-500' : ($rule->antecedent_somatic?->value === 'sedang' ? 'text-amber-500' : ($rule->antecedent_somatic?->value === 'ringan' ? 'text-indigo-500' : ($rule->antecedent_somatic?->value === 'minimal' ? 'text-emerald-500' : 'text-slate-500'))) }}">
+                                            {{ $rule->antecedent_somatic ? ucfirst($rule->antecedent_somatic->value) : 'Any' }}
                                         </span>
                                     </div>
                                 </div>
@@ -161,7 +167,7 @@
                             </td>
 
                             <td class="py-5 px-6 text-center">
-                                <button @click="openDetail({{ json_encode(['id' => $rule->rule_number, 'is_active' => $rule->is_active, 'updated_at' => $rule->updated_at->format('d M Y'), 'antecedent_total' => $rule->antecedent_total->value, 'antecedent_cognitive' => $rule->antecedent_cognitive->value, 'antecedent_somatic' => $rule->antecedent_somatic->value, 'consequent' => $rule->consequent->value, 'description' => $rule->description]) }})"
+                                <button @click="openDetail({{ json_encode(['id_real' => $rule->id, 'id' => $rule->rule_number, 'is_active' => $rule->is_active, 'updated_at' => $rule->updated_at->format('d M Y'), 'antecedent_total' => $rule->antecedent_total?->value, 'antecedent_cognitive' => $rule->antecedent_cognitive?->value, 'antecedent_somatic' => $rule->antecedent_somatic?->value, 'consequent' => $rule->consequent->value, 'description' => $rule->description]) }})"
                                         class="inline-flex items-center px-3 py-1.5 text-xs font-bold text-slate-600 border border-slate-200 rounded-xl hover:bg-slate-100 transition-all">
                                     <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                                     Detail
@@ -241,8 +247,9 @@
                                               'bg-amber-50 text-amber-700 border-amber-200': selectedRule.antecedent_total === 'sedang',
                                               'bg-indigo-50 text-indigo-600 border-indigo-200': selectedRule.antecedent_total === 'ringan',
                                               'bg-emerald-50 text-emerald-700 border-emerald-200': selectedRule.antecedent_total === 'minimal',
+                                              'bg-slate-100 text-slate-500 border-slate-200': !selectedRule.antecedent_total
                                           }"
-                                          x-text="selectedRule.antecedent_total.charAt(0).toUpperCase() + selectedRule.antecedent_total.slice(1)"></span>
+                                          x-text="selectedRule.antecedent_total ? selectedRule.antecedent_total.charAt(0).toUpperCase() + selectedRule.antecedent_total.slice(1) : 'ANY'"></span>
                                 </div>
                                 <div class="text-center text-[9px] font-black text-slate-400 uppercase tracking-widest">DAN</div>
                                 <div class="p-3 bg-white border border-slate-200 rounded-xl flex justify-between items-center">
@@ -253,8 +260,9 @@
                                               'bg-amber-50 text-amber-700 border-amber-200': selectedRule.antecedent_cognitive === 'sedang',
                                               'bg-indigo-50 text-indigo-600 border-indigo-200': selectedRule.antecedent_cognitive === 'ringan',
                                               'bg-emerald-50 text-emerald-700 border-emerald-200': selectedRule.antecedent_cognitive === 'minimal',
+                                              'bg-slate-100 text-slate-500 border-slate-200': !selectedRule.antecedent_cognitive
                                           }"
-                                          x-text="selectedRule.antecedent_cognitive.charAt(0).toUpperCase() + selectedRule.antecedent_cognitive.slice(1)"></span>
+                                          x-text="selectedRule.antecedent_cognitive ? selectedRule.antecedent_cognitive.charAt(0).toUpperCase() + selectedRule.antecedent_cognitive.slice(1) : 'ANY'"></span>
                                 </div>
                                 <div class="text-center text-[9px] font-black text-slate-400 uppercase tracking-widest">DAN</div>
                                 <div class="p-3 bg-white border border-slate-200 rounded-xl flex justify-between items-center">
@@ -265,8 +273,9 @@
                                               'bg-amber-50 text-amber-700 border-amber-200': selectedRule.antecedent_somatic === 'sedang',
                                               'bg-indigo-50 text-indigo-600 border-indigo-200': selectedRule.antecedent_somatic === 'ringan',
                                               'bg-emerald-50 text-emerald-700 border-emerald-200': selectedRule.antecedent_somatic === 'minimal',
+                                              'bg-slate-100 text-slate-500 border-slate-200': !selectedRule.antecedent_somatic
                                           }"
-                                          x-text="selectedRule.antecedent_somatic.charAt(0).toUpperCase() + selectedRule.antecedent_somatic.slice(1)"></span>
+                                          x-text="selectedRule.antecedent_somatic ? selectedRule.antecedent_somatic.charAt(0).toUpperCase() + selectedRule.antecedent_somatic.slice(1) : 'ANY'"></span>
                                 </div>
                             </div>
                         </div>
@@ -320,7 +329,13 @@
                             </div>
                         </template>
 
-                        <div class="pt-2">
+                        <div class="pt-2 flex items-center gap-3">
+                            <a :href="'{{ url('admin/fuzzy-rules') }}/' + selectedRule.id_real + '/edit'" class="w-full text-center py-3 bg-white border border-slate-200 text-[#0d7a70] font-bold text-sm rounded-xl hover:bg-slate-50 transition-colors">Edit</a>
+                            <form :action="'{{ url('admin/fuzzy-rules') }}/' + selectedRule.id_real" method="POST" onsubmit="return confirm('Hapus aturan ini?')" class="w-full">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="w-full py-3 bg-rose-50 border border-rose-200 text-rose-600 font-bold text-sm rounded-xl hover:bg-rose-600 hover:text-white transition-colors">Hapus</button>
+                            </form>
                             <button @click="showDetail = false"
                                     class="w-full py-3 bg-slate-100 text-slate-600 font-bold text-sm rounded-xl hover:bg-slate-200 transition-colors">
                                 Tutup

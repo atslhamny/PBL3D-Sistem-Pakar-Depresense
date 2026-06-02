@@ -28,12 +28,18 @@
                 <p class="text-slate-500 text-sm mt-1">Tinjau instrumen penilaian Beck Depression Inventory-II (BDI-II) secara dinamis</p>
             </div>
             
-            <div class="flex items-center gap-3">
-                <span class="text-xs font-semibold text-slate-400">Status Sistem:</span>
-                <span class="flex items-center px-3 py-1.5 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-xl border border-emerald-100 shadow-sm">
-                    <span class="h-2 w-2 rounded-full bg-emerald-500 mr-2 animate-pulse"></span>
-                    Aktif & Terkunci
-                </span>
+            <div class="flex flex-col items-end gap-3">
+                <a href="{{ route('admin.questions.create') }}" class="inline-flex items-center px-4 py-2 bg-[#0d7a70] text-white text-sm font-semibold rounded-xl hover:bg-[#0a635b] transition-colors shadow-sm">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    Tambah Pertanyaan
+                </a>
+                <div class="flex items-center gap-3">
+                    <span class="text-xs font-semibold text-slate-400">Status Sistem:</span>
+                    <span class="flex items-center px-3 py-1.5 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-xl border border-emerald-100 shadow-sm">
+                        <span class="h-2 w-2 rounded-full bg-emerald-500 mr-2 animate-pulse"></span>
+                        Aktif & Terkunci
+                    </span>
+                </div>
             </div>
         </div>
 
@@ -233,11 +239,23 @@
                             </div>
 
                             <!-- Footer Modal -->
-                            <div class="p-6 border-t border-slate-100 bg-slate-50/30 flex items-center gap-3">
-                                <span class="text-[10px] font-semibold text-slate-400">Version 1.0 (Locked)</span>
-                                <div class="ml-auto">
-                                    <button @click="showDetail = false" class="px-5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold rounded-xl transition-all">Tutup</button>
+                            <div class="p-6 border-t border-slate-100 bg-slate-50/30 flex items-center justify-between gap-3">
+                                <div>
+                                    <template x-if="!selectedQuestion.is_locked">
+                                        <div class="flex items-center gap-2">
+                                            <a :href="'{{ url('admin/questions') }}/' + selectedQuestion.id + '/edit'" class="px-4 py-2 bg-white border border-slate-200 text-[#0d7a70] text-xs font-bold rounded-xl hover:bg-slate-50 transition-all">Edit</a>
+                                            <form :action="'{{ url('admin/questions') }}/' + selectedQuestion.id" method="POST" onsubmit="return confirm('Hapus pertanyaan ini?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="px-4 py-2 bg-rose-50 border border-rose-200 text-rose-600 text-xs font-bold rounded-xl hover:bg-rose-600 hover:text-white transition-all">Hapus</button>
+                                            </form>
+                                        </div>
+                                    </template>
+                                    <template x-if="selectedQuestion.is_locked">
+                                        <span class="text-[10px] font-semibold text-slate-400">Version 1.0 (Locked)</span>
+                                    </template>
                                 </div>
+                                <button @click="showDetail = false" class="px-5 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold rounded-xl transition-all">Tutup</button>
                             </div>
                         </div>
 

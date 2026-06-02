@@ -5,7 +5,7 @@
         <!-- Header Page & Download Dropdown -->
         <div class="flex justify-between items-center mb-8 print:hidden">
             <div>
-                <h2 class="text-3xl font-extrabold text-slate-800 tracking-tight">Dashboard Ikhtisar</h2>
+                <h2 class="text-2xl font-bold text-slate-800 tracking-tight">Dashboard Ikhtisar</h2>
                 <p class="text-slate-500 mt-1 font-medium text-sm">Pantauan sistem dan penilaian DepreSense.</p>
             </div>
             
@@ -40,9 +40,8 @@
             </div>
         </div>
 
-        <!-- Teks header rapi khusus cetak PDF -->
         <div class="hidden print:block mb-8 border-b pb-4 text-slate-900">
-            <h1 class="text-3xl font-black">LAPORAN MONITORING DEPRESENSE</h1>
+            <h1 class="text-2xl font-bold">LAPORAN MONITORING DEPRESENSE</h1>
             <p class="text-sm text-slate-600 mt-1">Dicetak otomatis oleh sistem pada: {{ date('d M Y, H:i') }}</p>
         </div>
 
@@ -74,9 +73,9 @@
                     </div>
                     <div>
                         <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Total Pengguna</p>
-                        <h3 class="text-3xl font-black text-[#0d7a70] mt-1.5 flex items-center gap-2">
+                        <h3 class="text-2xl font-bold text-[#0d7a70] mt-1.5 flex items-center gap-2">
                             {{ number_format($stats['total_users']) }}
-                            <span class="text-emerald-500 text-xs font-extrabold flex items-center bg-emerald-50 px-2 py-0.5 rounded-lg border border-emerald-100">↑12%</span>
+                            <span class="text-emerald-500 text-xs font-bold flex items-center bg-emerald-50 px-2 py-0.5 rounded-lg border border-emerald-100">↑12%</span>
                         </h3>
                         <p class="text-[10px] text-slate-400 mt-2 font-semibold">dibandingkan periode sebelumnya</p>
                     </div>
@@ -99,9 +98,9 @@
                     </div>
                     <div>
                         <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Total Penilaian</p>
-                        <h3 class="text-3xl font-black text-slate-800 mt-1.5 flex items-center gap-2">
+                        <h3 class="text-2xl font-bold text-slate-800 mt-1.5 flex items-center gap-2">
                             {{ number_format($stats['total_screenings']) }}
-                            <span class="text-emerald-500 text-xs font-extrabold flex items-center bg-emerald-50 px-2 py-0.5 rounded-lg border border-emerald-100">↑8%</span>
+                            <span class="text-emerald-500 text-xs font-bold flex items-center bg-emerald-50 px-2 py-0.5 rounded-lg border border-emerald-100">↑8%</span>
                         </h3>
                         <p class="text-[10px] text-slate-400 mt-2 font-semibold">dibandingkan periode sebelumnya</p>
                     </div>
@@ -124,9 +123,9 @@
                     </div>
                     <div>
                         <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Persentase Depresi Tinggi</p>
-                        <h3 class="text-3xl font-black text-rose-600 mt-1.5 flex items-center gap-2">
+                        <h3 class="text-2xl font-bold text-rose-600 mt-1.5 flex items-center gap-2">
                             {{ $stats['high_depression_percentage'] }}%
-                            <span class="text-rose-500 text-xs font-extrabold flex items-center bg-rose-50 px-2 py-0.5 rounded-lg border border-rose-100">↑2%</span>
+                            <span class="text-rose-500 text-xs font-bold flex items-center bg-rose-50 px-2 py-0.5 rounded-lg border border-rose-100">↑2%</span>
                         </h3>
                         <p class="text-[10px] text-slate-400 mt-2 font-semibold">dibandingkan periode sebelumnya</p>
                     </div>
@@ -146,7 +145,7 @@
             <div class="lg:col-span-3 bg-white text-slate-800 p-8 rounded-[2rem] border border-slate-200 shadow-sm break-inside-avoid">
                 <div class="flex justify-between items-center mb-6">
                     <div>
-                        <h3 class="text-lg font-extrabold text-slate-800 tracking-tight">Tren Tingkat Depresi</h3>
+                        <h3 class="text-lg font-bold text-slate-800 tracking-tight">Tren Tingkat Depresi</h3>
                         <p class="text-xs text-slate-400 mt-0.5">Grafik Garis: Tren Ringan, Sedang, Berat</p>
                     </div>
                     <div x-data="{ open: false }" class="relative print:hidden">
@@ -163,12 +162,7 @@
                     </div>
                 </div>
                 <div class="relative h-[280px]">
-                    <canvas id="trendChart" 
-                            data-labels="{{ json_encode($trendData['labels']) }}"
-                            data-ringan="{{ json_encode($trendData['ringan']) }}"
-                            data-sedang="{{ json_encode($trendData['sedang']) }}"
-                            data-berat="{{ json_encode($trendData['berat']) }}">
-                    </canvas>
+                    <canvas id="trendChart"></canvas>
                 </div>
             </div>
 
@@ -177,16 +171,13 @@
                 <div>
                     <div class="flex justify-between items-center mb-6">
                         <div>
-                            <h3 class="text-lg font-extrabold text-slate-800 tracking-tight">Distribusi Tingkat Depresi</h3>
+                            <h3 class="text-lg font-bold text-slate-800 tracking-tight">Distribusi Tingkat Depresi</h3>
                             <p class="text-xs text-slate-400 mt-0.5">Live data dari total sesi penilaian mahasiswa</p>
                         </div>
-                        <span class="text-[9px] font-black text-slate-400 bg-slate-50 px-2.5 py-1 rounded-full border border-slate-100 uppercase tracking-wider print:hidden">Live Data</span>
+                        <span class="text-[9px] font-bold text-slate-400 bg-slate-50 px-2.5 py-1 rounded-full border border-slate-100 uppercase tracking-wider print:hidden">Live Data</span>
                     </div>
                     <div class="relative h-[250px]">
-                        <canvas id="distributionChart" 
-                                data-labels="{{ json_encode($chartData['labels']) }}"
-                                data-values="{{ json_encode($chartData['data']) }}">
-                        </canvas>
+                        <canvas id="distributionChart"></canvas>
                     </div>
                 </div>
                 <!-- Custom Horizontal Legend below the Bar Chart -->
@@ -212,7 +203,7 @@
             <!-- Insight Utama -->
             <div class="bg-white text-slate-800 p-8 rounded-[2rem] border border-slate-200 shadow-sm flex flex-col justify-between break-inside-avoid">
                 <div>
-                    <h3 class="text-xl font-extrabold text-slate-850 tracking-tight">Insight Utama</h3>
+                    <h3 class="text-xl font-bold text-slate-850 tracking-tight">Insight Utama</h3>
                     <p class="text-xs text-slate-400 mt-0.5">Analisis instan sistem diagnosis</p>
                 </div>
                 
@@ -237,10 +228,10 @@
             <div class="bg-white text-slate-800 p-8 rounded-[2rem] border border-slate-200 shadow-sm break-inside-avoid">
                 <div class="mb-6 flex justify-between items-center">
                     <div>
-                        <h3 class="text-xl font-extrabold text-slate-850 tracking-tight">Pengguna Perlu Perhatian</h3>
+                        <h3 class="text-xl font-bold text-slate-850 tracking-tight">Pengguna Perlu Perhatian</h3>
                         <p class="text-xs text-slate-400 mt-0.5">Daftar pengguna dengan skor asesmen kritis terdeteksi</p>
                     </div>
-                    <span class="text-[10px] font-extrabold text-rose-500 bg-rose-50 px-3.5 py-1.5 rounded-full border border-rose-100 uppercase tracking-wider">Segera Tangani</span>
+                    <span class="text-[10px] font-bold text-rose-500 bg-rose-50 px-3.5 py-1.5 rounded-full border border-rose-100 uppercase tracking-wider">Segera Tangani</span>
                 </div>
                 
                 <div class="overflow-x-auto">
@@ -258,7 +249,7 @@
                                     <td class="py-4">
                                         <div class="flex items-center gap-3">
                                             <!-- Avatar Circle matching screenshot -->
-                                            <div class="h-9 w-9 rounded-full bg-slate-50 border border-slate-200/80 font-extrabold text-[#0d7a70] text-sm flex items-center justify-center flex-shrink-0 shadow-sm">
+                                            <div class="h-9 w-9 rounded-full bg-slate-50 border border-slate-200/80 font-bold text-[#0d7a70] text-sm flex items-center justify-center flex-shrink-0 shadow-sm">
                                                 {{ substr($user['name'], 0, 1) }}
                                             </div>
                                             <div class="flex flex-col">
@@ -269,17 +260,17 @@
                                     </td>
                                     <td class="py-4">
                                         <div class="flex flex-col">
-                                            <span class="font-extrabold text-slate-700 text-sm">{{ $user['score'] }}</span>
+                                            <span class="font-bold text-slate-700 text-sm">{{ $user['score'] }}</span>
                                             <span class="text-[10px] text-slate-400 mt-0.5 font-semibold">({{ $user['level'] }})</span>
                                         </div>
                                     </td>
                                     <td class="py-4 text-right">
                                         @if($user['status'] === 'Memburuk')
-                                            <span class="inline-flex items-center px-3.5 py-1.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-rose-50 text-rose-600 border border-rose-100/60 shadow-sm">Memburuk</span>
+                                            <span class="inline-flex items-center px-3.5 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-rose-50 text-rose-600 border border-rose-100/60 shadow-sm">Memburuk</span>
                                         @elseif($user['status'] === 'Meningkat')
-                                            <span class="inline-flex items-center px-3.5 py-1.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-amber-50 text-amber-600 border border-amber-100/60 shadow-sm">Meningkat</span>
+                                            <span class="inline-flex items-center px-3.5 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-600 border border-amber-100/60 shadow-sm">Meningkat</span>
                                         @else
-                                            <span class="inline-flex items-center px-3.5 py-1.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-slate-50 text-slate-500 border border-slate-200/60 shadow-sm">Stabil</span>
+                                            <span class="inline-flex items-center px-3.5 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-slate-50 text-slate-500 border border-slate-200/60 shadow-sm">Stabil</span>
                                         @endif
                                     </td>
                                 </tr>
@@ -295,7 +286,7 @@
             <!-- Aktivitas Terbaru -->
             <div class="bg-white text-slate-800 p-8 rounded-[2rem] border border-slate-200 shadow-sm break-inside-avoid">
                 <div class="mb-6">
-                    <h3 class="text-xl font-extrabold text-slate-850 tracking-tight">Aktivitas Terbaru</h3>
+                    <h3 class="text-xl font-bold text-slate-850 tracking-tight">Aktivitas Terbaru</h3>
                     <p class="text-xs text-slate-400 mt-0.5">Operasional sistem dan pendaftaran akun terkini</p>
                 </div>
                 
@@ -312,43 +303,13 @@
                             @foreach($recentActivities as $act)
                                 <tr class="hover:bg-slate-50/50 transition-colors">
                                     <td class="py-4 text-slate-400 font-semibold">{{ $act['time'] }}</td>
-                                    <td class="py-4 font-extrabold text-slate-800 text-sm">{{ $act['activity'] }}</td>
+                                    <td class="py-4 font-bold text-slate-800 text-sm">{{ $act['activity'] }}</td>
                                     <td class="py-4 font-semibold text-slate-500 text-right">{{ $act['user'] }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
                 </div>
-            </div>
-
-            <!-- Aksi Cepat -->
-            <div class="bg-white text-slate-800 p-8 rounded-[2rem] border border-slate-200 shadow-sm break-inside-avoid flex flex-col justify-between">
-                <div>
-                    <h3 class="text-xl font-extrabold text-slate-850 tracking-tight">Aksi Cepat</h3>
-                    <p class="text-xs text-slate-400 mt-0.5">Pintasan navigasi operasional instan</p>
-                </div>
-                
-                <div class="my-6 space-y-4">
-                    <!-- Tambah Aturan -->
-                    <a href="{{ route('admin.fuzzy-rules.index') }}" class="w-full flex items-center justify-center p-4 bg-[#e6f4f2] border border-[#d2ebe7] rounded-xl hover:bg-[#d8f0ec] hover:border-[#b8dfd8] text-[#0d7a70] hover:text-[#0b635b] font-bold text-sm transition-all shadow-sm">
-                        + Tambah Aturan
-                    </a>
-
-                    <!-- Tambah Pertanyaan -->
-                    <a href="{{ route('admin.questions.index') }}" class="w-full flex items-center justify-center p-4 bg-[#e6f4f2] border border-[#d2ebe7] rounded-xl hover:bg-[#d8f0ec] hover:border-[#b8dfd8] text-[#0d7a70] hover:text-[#0b635b] font-bold text-sm transition-all shadow-sm">
-                        + Tambah Pertanyaan
-                    </a>
-
-                    <!-- Tambah Artikel -->
-                    <a href="{{ route('admin.articles.create') }}" class="w-full flex items-center justify-center p-4 bg-[#e6f4f2] border border-[#d2ebe7] rounded-xl hover:bg-[#d8f0ec] hover:border-[#b8dfd8] text-[#0d7a70] hover:text-[#0b635b] font-bold text-sm transition-all shadow-sm">
-                        + Tambah Artikel
-                    </a>
-                </div>
-                
-                <div class="text-[9px] font-extrabold text-slate-400 uppercase tracking-widest text-center mt-2">
-                    Akses Terproteksi Peran Admin
-                </div>
-            </div>
         </div>
 
     </div>
@@ -371,10 +332,10 @@
             // 1. Line Chart (Tren Tingkat Depresi)
             const trendCtx = document.getElementById('trendChart');
             if (trendCtx) {
-                const trendLabels = JSON.parse(trendCtx.getAttribute('data-labels'));
-                const dataRingan = JSON.parse(trendCtx.getAttribute('data-ringan'));
-                const dataSedang = JSON.parse(trendCtx.getAttribute('data-sedang'));
-                const dataBerat = JSON.parse(trendCtx.getAttribute('data-berat'));
+                const trendLabels = @json($trendData['labels']);
+                const dataRingan = @json($trendData['ringan']);
+                const dataSedang = @json($trendData['sedang']);
+                const dataBerat = @json($trendData['berat']);
 
                 new Chart(trendCtx, {
                     type: 'line',
@@ -450,8 +411,8 @@
             // 2. Bar Chart (Distribusi Tingkat Depresi)
             const distCtx = document.getElementById('distributionChart');
             if (distCtx) {
-                const chartLabels = JSON.parse(distCtx.getAttribute('data-labels'));
-                const chartValues = JSON.parse(distCtx.getAttribute('data-values'));
+                const chartLabels = @json($chartData['labels']);
+                const chartValues = @json($chartData['data']);
 
                 new Chart(distCtx, {
                     type: 'bar',
@@ -479,9 +440,7 @@
                         scales: {
                             y: { 
                                 beginAtZero: true,
-                                max: 1000,
                                 ticks: {
-                                    stepSize: 250,
                                     font: { size: 10, family: 'Inter' }
                                 },
                                 grid: { color: '#f8fafc', drawBorder: false }
