@@ -121,8 +121,12 @@
                             <td class="py-4 px-6 text-xs text-slate-500">
                                 @if($user->last_session)
                                     <div>
-                                        <p class="font-semibold text-slate-700">{{ $user->last_session->created_at->format('d M Y, H:i') }}</p>
-                                        <p class="text-[10px] text-slate-400">{{ $user->last_session->created_at->diffForHumans() }}</p>
+                                        <p class="font-semibold text-slate-700">
+                                            {{ $user->last_session->updated_at->timezone(config('app.timezone'))->format('d M Y, H:i') }}
+                                        </p>
+                                        <p class="text-[10px] text-slate-400">
+                                            {{ $user->last_session->updated_at->diffForHumans() }}
+                                        </p>
                                     </div>
                                 @else
                                     <span class="text-slate-400 italic">Belum ada</span>
