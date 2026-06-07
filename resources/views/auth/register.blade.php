@@ -1,4 +1,9 @@
 <x-guest-layout>
+
+    <x-slot name="title">Register | DepreSense</x-slot>
+
+    <div class="w-full bg-white"> </div>
+
     <div class="mb-8 text-center">
         <div class="flex bg-slate-100/50 p-1 rounded-2xl mb-6">
             <a href="{{ route('login') }}" class="flex-1 py-2 text-sm font-medium text-slate-500 text-center">Login</a>

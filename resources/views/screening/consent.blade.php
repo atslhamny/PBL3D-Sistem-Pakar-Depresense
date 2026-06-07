@@ -1,4 +1,10 @@
 <x-guest-layout>
+
+    <x-slot name="title">Mulai Assessment | DepreSense</x-slot>
+
+    <div class="w-full bg-white">
+        </div>
+
     <div class="text-center mb-6">
         <h2 class="text-2xl font-bold text-slate-800">Informed Consent</h2>
         <p class="text-slate-500 text-sm mt-1 font-medium italic">Persetujuan Penilaian</p>

@@ -1,4 +1,9 @@
 <x-app-layout>
+
+    <x-slot name="title">Riwayat | DepreSense</x-slot>
+
+    <div class="w-full bg-white"> </div>
+
     {{-- Header --}}
     <div class="mb-8">
         <h2 class="text-3xl font-extrabold text-slate-800 tracking-tight mb-2">Riwayat Penilaian</h2>

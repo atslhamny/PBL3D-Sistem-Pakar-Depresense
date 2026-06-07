@@ -1,4 +1,9 @@
-<x-admin-layout title="Validasi Kuesioner Diagnostik">
+<x-admin-layout>
+
+    <x-slot name="title">Validasi Kuesioner Diagnostik | DepreSense</x-slot>
+
+    <div class="w-full bg-white"> </div>
+
     <div x-data="{ 
         activeAccordion: 1,
         showDetail: false,

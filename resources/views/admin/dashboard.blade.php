@@ -1,4 +1,9 @@
-<x-admin-layout title="Dashboard Ikhtisar">
+<x-admin-layout>
+
+    <x-slot name="title">Dashboard | DepreSense</x-slot>
+
+    <div class="w-full bg-white"> </div>
+
     <!-- Dashboard Wrapper -->
     <div class="flex flex-col font-sans">
         

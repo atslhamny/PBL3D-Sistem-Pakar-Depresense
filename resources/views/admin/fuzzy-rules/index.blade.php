@@ -1,4 +1,9 @@
-<x-admin-layout title="Manajemen Aturan (Sistem Pakar)">
+<x-admin-layout>
+
+    <x-slot name="title">Manajemen Aturan (Sistem Pakar) | DepreSense</x-slot>
+
+    <div class="w-full bg-white"> </div>
+
     <div x-data="{
         showDetail: false,
         selectedRule: null,

@@ -1,4 +1,9 @@
 <x-guest-layout>
+
+    <x-slot name="title">Login | DepreSense</x-slot>
+
+    <div class="w-full bg-white"> </div>
+
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
     <div class="mb-8 text-center">

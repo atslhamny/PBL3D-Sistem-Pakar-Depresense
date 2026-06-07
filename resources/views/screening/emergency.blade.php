@@ -1,5 +1,11 @@
 @if(auth()->check())
 <x-app-layout>
+
+    <x-slot name="title">Emergency | DepreSense</x-slot>
+
+    <div class="w-full bg-white">
+        </div>
+
     <div class="text-center mb-10 mt-6">
         <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-rose-50 text-rose-600 mb-6 border border-rose-100 shadow-sm">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
