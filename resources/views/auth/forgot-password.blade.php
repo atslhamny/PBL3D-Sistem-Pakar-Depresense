@@ -1,4 +1,9 @@
 <x-guest-layout>
+
+    <x-slot name="title">Lupa Password | DepreSense</x-slot>
+
+    <div class="w-full bg-white"> </div>
+
     <div class="mb-8 text-center">
         <h2 class="text-2xl font-bold text-slate-800 mb-2">Lupa Password?</h2>
         <p class="text-[13px] text-slate-500 leading-relaxed px-2">

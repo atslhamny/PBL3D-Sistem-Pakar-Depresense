@@ -1,4 +1,9 @@
-<x-admin-layout title="Tambah Artikel">
+<x-admin-layout>
+
+    <x-slot name="title">Tambah Artikel | DepreSense</x-slot>
+
+    <div class="w-full bg-white"> </div>
+
     <div class="mb-8 flex items-center gap-4">
         <a href="{{ route('admin.articles.index') }}"
            class="p-2.5 bg-white border border-slate-200 text-slate-500 hover:text-[#0d7a70] hover:border-[#0d7a70] rounded-xl transition-all">

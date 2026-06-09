@@ -1,4 +1,9 @@
-<x-admin-layout :title="'Detail Pengguna — ' . $user->full_name">
+<x-admin-layout>
+
+    <x-slot name="title">Detail Pengguna - {{ $user->full_name }} | DepreSense</x-slot>
+
+    <div class="w-full bg-white"> </div>
+
     {{-- Back Button + Header --}}
     <div class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div class="flex items-center gap-4">

@@ -1,4 +1,10 @@
 <x-guest-layout maxWidth="max-w-5xl">
+
+    <x-slot name="title">Assessment | DepreSense</x-slot>
+
+    <div class="w-full bg-white">
+        </div>
+
     <div x-data="screeningForm({{ $question->id }}, {{ $question->item_number }}, {{ Js::from($question->answer_options) }})" class="w-full">
         {{-- Progress Bar --}}
         <div class="mb-10">

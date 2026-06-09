@@ -1,4 +1,9 @@
-<x-admin-layout title="Fungsi Keanggotaan Fuzzy">
+<x-admin-layout>
+
+    <x-slot name="title">Fungsi Keanggotaan Fuzzy | DepreSense</x-slot>
+
+    <div class="w-full bg-white"> </div>
+
     <div x-data="{ editModal: false, editItem: null, showSuccess: {{ session('success') ? 'true' : 'false' }} }" class="relative">
 
         <div class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">

@@ -1,4 +1,9 @@
 <x-app-layout>
+
+    <x-slot name="title">Dashboard | DepreSense</x-slot>
+
+    <div class="w-full bg-white"> </div>
+
     {{-- Bagian Atas: Salam Pembuka & Tombol Aksi --}}
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
         <div>

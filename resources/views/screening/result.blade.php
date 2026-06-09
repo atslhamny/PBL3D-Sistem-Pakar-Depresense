@@ -10,6 +10,11 @@
 
 @if(auth()->check())
 <x-app-layout>
+    <x-slot name="title">Hasil Assessment | DepreSense</x-slot>
+
+    <div class="w-full bg-white">
+        </div>
+
     {{-- ⚠️ EMERGENCY BANNER — shown only when suicide ideation was detected --}}
     @if($emergencyTriggered)
     <div class="mb-8 rounded-[2rem] overflow-hidden shadow-lg border border-rose-200"

@@ -1,4 +1,9 @@
 <x-admin-layout title="Manajemen Artikel">
+
+    <x-slot name="title">Manajemen Artikel | DepreSense</x-slot>
+
+    <div class="w-full bg-white"> </div>
+
     <div class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
             <h2 class="text-2xl font-bold text-slate-800">Manajemen Artikel</h2>
