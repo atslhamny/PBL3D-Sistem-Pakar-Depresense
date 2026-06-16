@@ -1,59 +1,225 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Dashboard Mahasiswa') }}
-        </h2>
-    </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mb-6 border border-gray-100 dark:border-gray-700">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
-                    <h3 class="text-2xl font-bold mb-2">Selamat Datang, {{ auth()->user()->full_name }}!</h3>
-                    <p class="text-gray-500 dark:text-gray-400">Pantau kondisi kesehatan mental Anda secara berkala.</p>
+    <x-slot name="title">Dashboard | DepreSense</x-slot>
+
+    <div class="w-full bg-white"> </div>
+
+    {{-- Bagian Atas: Salam Pembuka & Tombol Aksi --}}
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+        <div>
+            {{-- Dikembalikan menggunakan full_name karena kolomnya terbukti ada di model User --}}
+            <h2 class="text-2xl font-bold text-slate-800">
+                Halo, {{ Auth::check() ? Auth::user()->full_name : 'Mahasiswa' }}
+            </h2>
+            <p class="text-slate-500 text-sm mt-1">Berikut adalah ringkasan kesehatan mental Anda saat ini.</p>
+        </div>
+        
+        <a href="{{ route('screening.consent') }}" class="flex items-center px-5 py-2.5 bg-[#0d7a70] text-white text-sm font-bold rounded-xl hover:bg-[#0a635b] transition-all shadow-sm shadow-teal-100">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+            </svg>
+            {{ $latestSession ? 'Mulai Penilaian Baru' : 'Mulai Assessment' }}
+        </a>
+    </div>
+
+    {{-- Banner Lanjutkan Sesi (Jika ada sesi terputus) --}}
+    @if(isset($activeSession))
+        <div class="mb-8 p-6 bg-orange-50 border border-orange-200 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm">
+            <div class="flex items-center gap-4">
+                <div class="p-3 bg-orange-100 text-orange-600 rounded-full flex-shrink-0">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-orange-800">Sesi Assessment Belum Selesai</h3>
+                    <p class="text-xs text-orange-700 mt-1">Anda memiliki sesi pengisian kuesioner yang terputus. Waktu Anda tersisa sekitar <strong>{{ floor(now()->diffInSeconds($activeSession->expires_at) / 60) }} menit</strong>.</p>
+                </div>
+            </div>
+            <a href="{{ route('screening.question') }}" class="px-5 py-2.5 bg-orange-500 hover:bg-orange-600 text-white text-sm font-bold rounded-xl transition-all shadow-sm shadow-orange-200 flex-shrink-0">
+                Lanjutkan Pengisian
+            </a>
+        </div>
+    @endif
+
+    {{-- Logika Kondisi Berdasarkan Riwayat Assessment --}}
+    @if($latestSession)
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            
+            {{-- Card STATUS SAAT INI --}}
+            <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between min-h-[200px]">
+                <div>
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Status Saat Ini</span>
+                        <span class="text-slate-400">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                            </svg>
+                        </span>
+                    </div>
+                    
+                    {{-- Badge Kategori Hasil Indikasi adaptif --}}
+                    @php
+                        // Memberikan fallback string kosong jika value bernilai null agar tidak crash
+                        $level = strtolower($latestSession->depression_level->value ?? '');
+                        $badgeClass = 'bg-slate-50 text-slate-500 border-slate-100';
+                        $description = 'Tetap pantau kondisi kesehatan mental Anda secara berkala.';
+                        
+                        if ($level === 'minimal') {
+                            $badgeClass = 'bg-emerald-50 text-emerald-600 border-emerald-100';
+                            $description = 'Tingkat stres Anda terpantau aman dan berada dalam batas wajar.';
+                        } elseif (in_array($level, ['ringan', 'sedang'])) {
+                            $badgeClass = 'bg-amber-50 text-amber-600 border-amber-100';
+                            $description = 'Tingkat stres terpantau sedang, namun perlu sedikit perhatian pada rutinitas istirahat.';
+                        } elseif ($level === 'berat') {
+                            $badgeClass = 'bg-rose-50 text-rose-600 border-rose-100';
+                            $description = 'Indikasi tingkat depresi Anda cukup tinggi. Mohon pertimbangkan berkonsultasi dengan profesional.';
+                        }
+                    @endphp
+
+                    <span class="inline-flex justify-center items-center w-max px-4 py-1.5 rounded-full border text-sm font-bold capitalize {{ $badgeClass }} mb-3">
+                        {{ $latestSession->depression_level->value ?? 'Tidak Diketahui' }}
+                    </span>
+                    
+                    <p class="text-xs text-slate-500 leading-relaxed mb-4">
+                        {{ $description }}
+                    </p>
+                </div>
+                
+                <div class="text-[10px] text-slate-400 font-medium pt-3 border-t border-slate-50">
+                    {{-- Proteksi Carbon format jika completed_at berupa string --}}
+                    Terakhir diperbarui: {{ $latestSession->completed_at ? \Carbon\Carbon::parse($latestSession->completed_at)->timezone(config('app.timezone'))->translatedFormat('d M Y, H:i') : '-' }}
                 </div>
             </div>
 
-            @if($latestSession)
-                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg border border-gray-100 dark:border-gray-700">
-                    <div class="p-6">
-                        <h4 class="font-bold text-lg mb-4 text-gray-800 dark:text-white">Hasil Assessment Terakhir</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                            <div class="bg-indigo-50 dark:bg-indigo-900/30 p-4 rounded-xl border border-indigo-100 dark:border-indigo-800">
-                                <span class="block text-sm text-indigo-600 dark:text-indigo-400 font-semibold mb-1">Tingkat Indikasi</span>
-                                <span class="text-2xl font-black capitalize text-indigo-700 dark:text-indigo-300">{{ $latestSession->depression_level->value }}</span>
-                            </div>
-                            <div class="bg-slate-50 dark:bg-slate-700/50 p-4 rounded-xl border border-slate-200 dark:border-slate-600">
-                                <span class="block text-sm text-slate-500 dark:text-slate-400 font-semibold mb-1">Tanggal Assessment</span>
-                                <span class="text-lg font-bold text-slate-700 dark:text-slate-200">{{ $latestSession->completed_at->format('d M Y, H:i') }}</span>
-                            </div>
-                            <div class="bg-slate-50 dark:bg-slate-700/50 p-4 rounded-xl border border-slate-200 dark:border-slate-600">
-                                <span class="block text-sm text-slate-500 dark:text-slate-400 font-semibold mb-1">Total Skor BDI-II</span>
-                                <span class="text-lg font-bold text-slate-700 dark:text-slate-200">{{ $latestSession->score_total }}</span>
-                            </div>
-                        </div>
 
-                        <div class="flex gap-4">
-                            <a href="{{ route('screening.consent') }}" class="inline-flex justify-center items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-lg font-semibold text-sm text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors shadow-sm">
-                                Lakukan Assessment Ulang
-                            </a>
-                        </div>
-                    </div>
+
+            {{-- Card TANGGAL PENILAIAN --}}
+            <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between">
+                <div>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Tanggal Assessment</span>
+                    <span class="text-lg font-bold text-slate-700 block mt-2">{{ $latestSession->completed_at ? \Carbon\Carbon::parse($latestSession->completed_at)->timezone(config('app.timezone'))->translatedFormat('d F Y') : '-' }}</span>
+                    <span class="text-xs text-slate-400">Pukul {{ $latestSession->completed_at ? \Carbon\Carbon::parse($latestSession->completed_at)->timezone(config('app.timezone'))->format('H:i') : '-' }} WIB</span>
                 </div>
-            @else
-                <div class="bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800/50 overflow-hidden shadow-sm sm:rounded-xl text-center py-12">
-                    <div class="p-6">
-                        <svg class="mx-auto h-12 w-12 text-indigo-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">Belum Ada Riwayat Assessment</h3>
-                        <p class="text-gray-500 dark:text-gray-400 mb-6">Mulai assessment pertama Anda untuk mengetahui kondisi kesehatan mental.</p>
-                        <a href="{{ route('screening.consent') }}" class="inline-flex justify-center items-center px-6 py-3 bg-indigo-600 border border-transparent rounded-lg font-semibold text-sm text-white hover:bg-indigo-700 focus:outline-none transition-colors shadow-sm">
-                            Mulai Assessment
-                        </a>
-                    </div>
+                <div class="text-[11px] text-slate-400">
+                    Sesi tersimpan secara aman
                 </div>
-            @endif
+            </div>
+
+            {{-- Card REKOMENDASI HARI INI --}}
+            <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between">
+                <div>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2">Rekomendasi Hari Ini</span>
+                    @php
+                        $recTitle = 'Meditasi Ringan';
+                        $recDesc = 'Latihan 5 menit untuk membantu menurunkan frekuensi detak jantung dan rileksasi saraf.';
+                        $level = strtolower($latestSession->depression_level->value ?? '');
+                        
+                        if ($level === 'minimal') {
+                            $recTitle = 'Pertahankan Rutinitas';
+                            $recDesc = 'Tetap jalani rutinitas sehat, olahraga teratur, dan istirahat cukup untuk menjaga kondisi optimal.';
+                        } elseif (in_array($level, ['ringan', 'sedang'])) {
+                            $recTitle = 'Manajemen Waktu';
+                            $recDesc = 'Luangkan waktu untuk hobi atau aktivitas yang Anda senangi agar pikiran tidak terlalu tegang.';
+                        } elseif ($level === 'berat') {
+                            $recTitle = 'Cari Bantuan Profesional';
+                            $recDesc = 'Sangat disarankan untuk menghubungi layanan konseling mahasiswa atau psikolog terdekat.';
+                        }
+                    @endphp
+                    <p class="text-xs font-bold text-[#0d7a70] mb-1">{{ $recTitle }}</p>
+                    <p class="text-[11px] text-slate-500 leading-relaxed">{{ $recDesc }}</p>
+                </div>
+
+            </div>
+
         </div>
-    </div>
+
+        {{-- Grafik Riwayat Penilaian Pendukung --}}
+        <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+            <h3 class="text-base font-bold text-slate-800 mb-1">Riwayat Penilaian (5 Terakhir)</h3>
+            <p class="text-xs text-slate-400 mb-6">Grafik fluktuasi tingkat indikasi stres Anda</p>
+            
+            <div class="h-64 w-full relative">
+                <canvas id="dashboardChart"></canvas>
+            </div>
+        </div>
+
+    @else
+        {{-- State Kosong: Jika User Belum Pernah Melakukan Screening --}}
+        <div class="bg-white border border-slate-100 rounded-[2rem] p-12 flex flex-col items-center justify-center min-h-[400px] shadow-sm">
+            <div class="mb-6 p-6 bg-[#f0f9fa] rounded-full text-[#0d7a70]">
+                <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+            </div>
+
+            <div class="max-w-md text-center">
+                <h3 class="text-xl font-extrabold text-slate-800 mb-2">Belum Ada Riwayat Assessment</h3>
+                <p class="text-sm text-slate-500 leading-relaxed mb-8">
+                    Mulai assessment pertama Anda menggunakan standar kuesioner BDI-II untuk mendeteksi serta mengetahui kondisi kesehatan mental Anda.
+                </p>
+                
+                <a href="{{ route('screening.consent') }}" class="inline-flex justify-center items-center px-6 py-3 bg-[#0d7a70] text-white text-xs font-bold uppercase tracking-widest rounded-xl hover:bg-[#0a635b] transition-all shadow-md shadow-teal-700/10">
+                    Mulai Assessment Pertama
+                </a>
+            </div>
+        </div>
+    @endif
+
+    @if($latestSession && $chartData)
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const ctx = document.getElementById('dashboardChart');
+                if(ctx) {
+                    new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: {!! json_encode($chartData['labels']) !!},
+                            datasets: [{
+                                label: 'Skor Total BDI-II',
+                                data: {!! json_encode($chartData['scores']) !!},
+                                borderColor: '#0d7a70',
+                                backgroundColor: 'rgba(13, 122, 112, 0.1)',
+                                borderWidth: 3,
+                                pointBackgroundColor: '#0d7a70',
+                                pointBorderColor: '#fff',
+                                pointBorderWidth: 2,
+                                pointRadius: 4,
+                                fill: true,
+                                tension: 0.4
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { display: false },
+                                tooltip: {
+                                    backgroundColor: '#1e293b',
+                                    padding: 12,
+                                    titleFont: { size: 13, family: 'Inter' },
+                                    bodyFont: { size: 13, family: 'Inter' },
+                                    displayColors: false,
+                                    cornerRadius: 8,
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    max: 63, // Max BDI-II score is 63
+                                    grid: { color: '#f1f5f9', drawBorder: false },
+                                    ticks: { font: { family: 'Inter', size: 11 }, color: '#94a3b8', stepSize: 10 }
+                                },
+                                x: {
+                                    grid: { display: false, drawBorder: false },
+                                    ticks: { font: { family: 'Inter', size: 11 }, color: '#94a3b8' }
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+        </script>
+    @endif
 </x-app-layout>

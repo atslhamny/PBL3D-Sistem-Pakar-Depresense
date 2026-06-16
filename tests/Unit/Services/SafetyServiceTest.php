@@ -26,17 +26,17 @@ class SafetyServiceTest extends TestCase
         $this->assertFalse($service->check(1, 2));
     }
 
-    public function test_trigger_emergency_updates_session()
+    public function test_flag_safety_alert_updates_session()
     {
         $service = new SafetyService();
         $session = ScreeningSession::create(['informed_consent_at' => now(), 'status' => SessionStatus::InProgress]);
         
-        $service->triggerEmergency($session);
+        $service->flagSafetyAlert($session);
 
         $session->refresh();
-        $this->assertEquals(SessionStatus::EmergencyStopped, $session->status);
-        $this->assertTrue($session->emergency_triggered);
+        $this->assertEquals(SessionStatus::InProgress, $session->status);
+        $this->assertTrue((bool) $session->emergency_triggered);
         $this->assertEquals(9, $session->emergency_item);
-        $this->assertNotNull($session->completed_at);
+        $this->assertNull($session->completed_at);
     }
 }

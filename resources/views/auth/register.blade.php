@@ -1,4 +1,9 @@
 <x-guest-layout>
+
+    <x-slot name="title">Register | DepreSense</x-slot>
+
+    <div class="w-full bg-white"> </div>
+
     <div class="mb-8 text-center">
         <div class="flex bg-slate-100/50 p-1 rounded-2xl mb-6">
             <a href="{{ route('login') }}" class="flex-1 py-2 text-sm font-medium text-slate-500 text-center">Login</a>
@@ -19,21 +24,24 @@
             <div>
                 <label for="university" class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1 ml-1">Universitas</label>
                 <input id="university" class="block w-full px-4 py-3 bg-slate-50 border-slate-100 focus:border-[#00aba9] focus:ring-[#00aba9] rounded-2xl shadow-sm text-sm" type="text" name="university" :value="old('university')" placeholder="Nama kampus" autocomplete="organization" />
+                <x-input-error :messages="$errors->get('university')" class="mt-2" />
             </div>
             <div>
                 <label for="semester" class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1 ml-1">Semester</label>
                 <input id="semester" class="block w-full px-4 py-3 bg-slate-50 border-slate-100 focus:border-[#00aba9] focus:ring-[#00aba9] rounded-2xl shadow-sm text-sm" type="number" min="1" max="14" name="semester" :value="old('semester')" placeholder="Contoh: 4" />
+                <x-input-error :messages="$errors->get('semester')" class="mt-2" />
             </div>
         </div>
 
         <div class="mb-4">
             <label for="study_program" class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1 ml-1">Program Studi</label>
             <input id="study_program" class="block w-full px-4 py-3 bg-slate-50 border-slate-100 focus:border-[#00aba9] focus:ring-[#00aba9] rounded-2xl shadow-sm text-sm" type="text" name="study_program" :value="old('study_program')" placeholder="Contoh: Sistem Informasi" />
+            <x-input-error :messages="$errors->get('study_program')" class="mt-2" />
         </div>
 
         <div class="mb-4">
             <label for="email" class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1 ml-1">Email</label>
-            <input id="email" class="block w-full px-4 py-3 bg-slate-50 border-slate-100 focus:border-[#00aba9] focus:ring-[#00aba9] rounded-2xl shadow-sm text-sm" type="email" name="email" :value="old('email')" placeholder="nama@email.com" required autocomplete="username" />
+            <input id="email" class="block w-full px-4 py-3 bg-slate-50 border-slate-100 focus:border-[#00aba9] focus:ring-[#00aba9] rounded-2xl shadow-sm text-sm" type="email" name="email" :value="old('email')" placeholder="contoh: budi@mahasiswa.ac.id" required autocomplete="username" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
@@ -42,11 +50,16 @@
             <div class="relative">
                 <input id="password" class="block w-full px-4 py-3 bg-slate-50 border-slate-100 focus:border-[#00aba9] focus:ring-[#00aba9] rounded-2xl shadow-sm text-sm"
                                 :type="showPw ? 'text' : 'password'"
-                                name="password" placeholder="Minimal 8 karakter"
+                                name="password" placeholder="contoh: rahasia123 (minimal 8 karakter)"
                                 required autocomplete="new-password" />
-                <button type="button" @click="showPw = !showPw" class="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400">
-                    <svg x-show="!showPw" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                    <svg x-show="showPw" x-cloak class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a10.05 10.05 0 014.13-5.247M10 10a3 3 0 013 3m3 3a9 9 0 01-14.12-14.12M15 15l6 6m-6-6l1.125-1.125M19.172 19.172L21 21M3 3l1.828 1.828"></path></svg>
+                <button type="button" @click="showPw = !showPw" class="absolute inset-y-0 right-0 px-4 flex items-center text-slate-400 hover:text-[#00aba9] focus:outline-none transition-colors">
+                    <svg x-show="!showPw" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88" />
+                    </svg>
+                    <svg x-show="showPw" x-cloak class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                    </svg>
                 </button>
             </div>
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
@@ -58,9 +71,14 @@
                 <input id="password_confirmation" class="block w-full px-4 py-3 bg-slate-50 border-slate-100 focus:border-[#00aba9] focus:ring-[#00aba9] rounded-2xl shadow-sm text-sm"
                                 :type="showConfirmPw ? 'text' : 'password'"
                                 name="password_confirmation" placeholder="Ulangi password" required autocomplete="new-password" />
-                <button type="button" @click="showConfirmPw = !showConfirmPw" class="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400">
-                    <svg x-show="!showConfirmPw" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                    <svg x-show="showConfirmPw" x-cloak class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a10.05 10.05 0 014.13-5.247M10 10a3 3 0 013 3m3 3a9 9 0 01-14.12-14.12M15 15l6 6m-6-6l1.125-1.125M19.172 19.172L21 21M3 3l1.828 1.828"></path></svg>
+                <button type="button" @click="showConfirmPw = !showConfirmPw" class="absolute inset-y-0 right-0 px-4 flex items-center text-slate-400 hover:text-[#00aba9] focus:outline-none transition-colors">
+                    <svg x-show="!showConfirmPw" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88" />
+                    </svg>
+                    <svg x-show="showConfirmPw" x-cloak class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                    </svg>
                 </button>
             </div>
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />

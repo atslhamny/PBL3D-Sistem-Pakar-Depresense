@@ -16,7 +16,6 @@ class FuzzyEngineTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        // Seed the database to have parameters and rules
         $this->artisan('db:seed', ['--class' => 'FuzzyMembershipSeeder']);
         $this->artisan('db:seed', ['--class' => 'FuzzyRuleSeeder']);
     }
@@ -25,14 +24,14 @@ class FuzzyEngineTest extends TestCase
     {
         $engine = app(FuzzyEngine::class);
 
-        // Case 1: Minimal values
-        $input = new FuzzyInput(total: 5, cognitive: 3, somatic: 2);
+        // Case 1: Nilai minimal — tidak ada gejala berarti
+        $input = new FuzzyInput(cognitive: 3, somatic: 2);
         $result = $engine->run($input);
         $this->assertInstanceOf(FuzzyResult::class, $result);
         $this->assertEquals(DepressionLevel::Minimal, $result->depressionLevel);
 
-        // Case 2: Berat values
-        $input = new FuzzyInput(total: 35, cognitive: 22, somatic: 13);
+        // Case 2: Nilai berat — gejala kognitif dan somatik keduanya tinggi
+        $input = new FuzzyInput(cognitive: 22, somatic: 13);
         $result = $engine->run($input);
         $this->assertInstanceOf(FuzzyResult::class, $result);
         $this->assertEquals(DepressionLevel::Berat, $result->depressionLevel);

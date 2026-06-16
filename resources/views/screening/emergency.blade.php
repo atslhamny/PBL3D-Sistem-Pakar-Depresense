@@ -1,46 +1,125 @@
-<x-guest-layout>
-    <div class="text-center">
-        <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-red-100 text-red-600 mb-6 border-4 border-red-50 dark:bg-red-900/50 dark:text-red-400 dark:border-red-900/30">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+@if(auth()->check())
+<x-app-layout>
+
+    <x-slot name="title">Emergency | DepreSense</x-slot>
+
+    <div class="w-full bg-white">
+        </div>
+
+    <div class="text-center mb-10 mt-6">
+        <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-rose-50 text-rose-600 mb-6 border border-rose-100 shadow-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
             </svg>
         </div>
         
-        <h2 class="text-3xl font-extrabold text-slate-800 dark:text-white mb-4">Kami Peduli Pada Anda</h2>
+        <h2 class="text-3xl font-extrabold text-slate-800 mb-4">Anda Tidak Sendirian</h2>
         
-        <p class="text-slate-600 dark:text-slate-300 text-lg mb-8 leading-relaxed">
-            Berdasarkan respon yang Anda berikan, sistem mendeteksi adanya beban emosional yang berat dan pemikiran yang berisiko. Kami sangat menyarankan Anda untuk <strong>segera menghubungi profesional atau orang terdekat</strong>.
+        <p class="text-slate-600 text-lg leading-relaxed max-w-2xl mx-auto">
+            Kami memahami bahwa saat ini mungkin terasa sangat berat. Keselamatan dan kesejahteraan Anda adalah prioritas. Jangan ragu untuk <strong>menjangkau bantuan profesional</strong> yang siap mendengarkan Anda.
         </p>
+    </div>
 
-        <div class="bg-red-50 dark:bg-red-900/20 rounded-2xl p-6 border border-red-100 dark:border-red-900/50 text-left mb-8 shadow-sm">
-            <h3 class="text-red-800 dark:text-red-300 font-bold mb-3 flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
-                Layanan Bantuan Krisis (24 Jam)
-            </h3>
-            <ul class="space-y-4 text-red-700 dark:text-red-400">
-                <li class="flex justify-between items-center bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm border border-red-100 dark:border-red-900/30">
-                    <div>
-                        <strong class="block text-red-900 dark:text-red-200">Kemenkes RI (Sejiwa)</strong>
-                        <span class="text-sm">Layanan Psikologis Bantuan Kejiwaan</span>
+    <div class="mb-10 bg-white rounded-[2rem] border border-rose-100 overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
+        <div class="px-8 py-5 border-b border-rose-50 bg-rose-50/50">
+            <h4 class="font-bold text-rose-800 flex items-center">
+                <svg class="w-5 h-5 mr-3 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                </svg>
+                Pusat Bantuan Krisis (Gratis &amp; Rahasia)
+            </h4>
+        </div>
+        <div class="p-8">
+            <ul class="space-y-4">
+                <li class="flex flex-col sm:flex-row sm:justify-between sm:items-center p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                    <div class="mb-3 sm:mb-0">
+                        <strong class="block text-slate-800 font-bold">Kemenkes RI (Sejiwa)</strong>
+                        <span class="text-sm text-slate-500">Layanan Psikologis Bantuan Kejiwaan (24 Jam)</span>
                     </div>
-                    <a href="tel:119" class="font-bold text-xl px-4 py-2 bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300 rounded-lg hover:bg-red-200 dark:hover:bg-red-800/80 transition-colors">119 (Ext 8)</a>
+                    <a href="tel:119" class="inline-flex justify-center font-bold px-6 py-2 bg-rose-100 text-rose-700 rounded-xl hover:bg-rose-200 transition-colors">
+                        📞 119 (Ext 8)
+                    </a>
                 </li>
-                <li class="flex justify-between items-center bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm border border-red-100 dark:border-red-900/30">
-                    <div>
-                        <strong class="block text-red-900 dark:text-red-200">Layanan Darurat Polisi</strong>
-                        <span class="text-sm">Jika berada dalam kondisi sangat kritis</span>
+                
+                <li class="flex flex-col sm:flex-row sm:justify-between sm:items-center p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                    <div class="mb-3 sm:mb-0">
+                        <strong class="block text-slate-800 font-bold">Layanan Konseling Mahasiswa</strong>
                     </div>
-                    <a href="tel:110" class="font-bold text-xl px-4 py-2 bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300 rounded-lg hover:bg-red-200 dark:hover:bg-red-800/80 transition-colors">110</a>
                 </li>
             </ul>
         </div>
+    </div>
 
-        <p class="text-slate-500 dark:text-slate-400 text-sm mb-8">
-            Harap ingat bahwa Anda tidak sendirian. Ada banyak orang yang bersedia membantu Anda melewati masa sulit ini.
+    <div class="text-center mb-8">
+        <p class="text-slate-500 text-sm">
+            Harap ingat bahwa ada banyak orang yang bersedia membantu Anda melewati masa sulit ini.
         </p>
+    </div>
 
-        <a href="{{ route('home') }}" class="inline-flex justify-center items-center px-8 py-3.5 border border-slate-300 dark:border-slate-600 rounded-xl shadow-sm text-base font-medium text-slate-700 bg-white hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 focus:outline-none transition-all">
+    <div class="text-center mt-4">
+        <a href="{{ route('user.dashboard') }}" class="inline-flex justify-center items-center px-6 py-2 text-sm font-semibold text-slate-400 hover:text-rose-600 transition-colors">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Kembali ke Beranda
+        </a>
+    </div>
+</x-app-layout>
+@else
+<x-guest-layout maxWidth="sm:max-w-3xl">
+    <div class="text-center mb-10 mt-6">
+        <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-rose-50 text-rose-600 mb-6 border border-rose-100 shadow-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+        </div>
+        
+        <h2 class="text-3xl font-extrabold text-slate-800 mb-4">Anda Tidak Sendirian</h2>
+        
+        <p class="text-slate-600 text-lg leading-relaxed max-w-2xl mx-auto">
+            Kami memahami bahwa saat ini mungkin terasa sangat berat. Keselamatan dan kesejahteraan Anda adalah prioritas. Jangan ragu untuk <strong>menjangkau bantuan profesional</strong> yang siap mendengarkan Anda.
+        </p>
+    </div>
+
+    <div class="mb-10 bg-white rounded-[2rem] border border-rose-100 overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
+        <div class="px-8 py-5 border-b border-rose-50 bg-rose-50/50">
+            <h4 class="font-bold text-rose-800 flex items-center">
+                <svg class="w-5 h-5 mr-3 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                </svg>
+                Pusat Bantuan Krisis (Gratis &amp; Rahasia)
+            </h4>
+        </div>
+        <div class="p-8">
+            <ul class="space-y-4">
+                <li class="flex flex-col sm:flex-row sm:justify-between sm:items-center p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                    <div class="mb-3 sm:mb-0">
+                        <strong class="block text-slate-800 font-bold">Kemenkes RI (Sejiwa)</strong>
+                        <span class="text-sm text-slate-500">Layanan Psikologis Bantuan Kejiwaan (24 Jam)</span>
+                    </div>
+                    <a href="tel:119" class="inline-flex justify-center font-bold px-6 py-2 bg-rose-100 text-rose-700 rounded-xl hover:bg-rose-200 transition-colors">
+                        📞 119 (Ext 8)
+                    </a>
+                </li>
+                
+                <li class="flex flex-col sm:flex-row sm:justify-between sm:items-center p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                    <div class="mb-3 sm:mb-0">
+                        <strong class="block text-slate-800 font-bold">Layanan Konseling Mahasiswa</strong>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="text-center mb-8">
+        <p class="text-slate-500 text-sm">
+            Harap ingat bahwa ada banyak orang yang bersedia membantu Anda melewati masa sulit ini.
+        </p>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{{ route('home') }}" class="inline-flex justify-center items-center px-6 py-2 text-sm font-semibold text-slate-400 hover:text-rose-600 transition-colors">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
             Kembali ke Beranda
         </a>
     </div>
 </x-guest-layout>
+@endif

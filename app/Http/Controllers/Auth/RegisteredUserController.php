@@ -33,12 +33,18 @@ class RegisteredUserController extends Controller
         $request->validate([
             'full_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'university' => ['nullable', 'string', 'max:255'],
+            'study_program' => ['nullable', 'string', 'max:255'],
+            'semester' => ['nullable', 'integer', 'min:1', 'max:14'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
         $user = User::create([
             'full_name' => $request->full_name,
             'email' => $request->email,
+            'university' => $request->university,
+            'study_program' => $request->study_program,
+            'semester' => $request->semester,
             'password' => Hash::make($request->password),
         ]);
 
@@ -46,7 +52,9 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        $url = $user->role->value === 'admin' ? route('admin.dashboard', absolute: false) : route('user.dashboard', absolute: false);
+        // Karena role menggunakan default database, kita perlu merefresh model atau menggunakan auth()->user()
+        $role = $user->role->value ?? 'user';
+        $url = $role === 'admin' ? route('admin.dashboard', absolute: false) : route('user.dashboard', absolute: false);
         return redirect($url);
     }
 }

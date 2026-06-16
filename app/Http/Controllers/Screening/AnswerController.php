@@ -13,17 +13,15 @@ class AnswerController extends Controller
     public function store(SaveAnswerRequest $request, ScreeningRepository $repo, SafetyService $safetyService)
     {
         $session = $request->active_session;
-        
-        // CRITICAL: Check safety BEFORE saving
+
+        // SAFETY CHECK: If suicide ideation answer detected, flag the session
+        // but do NOT stop screening — the user continues all questions
+        // and will see an emergency banner on the result page.
         if ($safetyService->check($request->item_number, $request->answer_value)) {
-            $safetyService->triggerEmergency($session);
-            
-            if ($request->expectsJson()) {
-                return response()->json(['redirect' => route('screening.emergency')]);
-            }
-            return redirect()->route('screening.emergency');
+            $safetyService->flagSafetyAlert($session);
         }
 
+        // Always save the answer and move to the next question
         $repo->saveAnswer($session, $request->validated());
 
         if ($request->expectsJson()) {
