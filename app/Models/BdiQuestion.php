@@ -15,13 +15,14 @@ class BdiQuestion extends Model
     protected function casts(): array
     {
         return [
-            'category' => QuestionCategory::class,
-            'sub_category' => QuestionSubCategory::class,
+            'category'       => QuestionCategory::class,
+            'sub_category'   => QuestionSubCategory::class,
             'is_safety_item' => 'boolean',
-            'is_locked' => 'boolean',
-            'item_number' => 'integer',
+            'is_locked'      => 'boolean',
+            'item_number'    => 'integer',
             'safety_threshold' => 'integer',
-            'sort_order' => 'integer',
+            'sort_order'     => 'integer',
+            'answer_options' => 'array',
         ];
     }
 

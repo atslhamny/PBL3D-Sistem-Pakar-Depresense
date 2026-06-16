@@ -13,6 +13,7 @@ class ScreeningController extends Controller
     {
         $session = $request->active_session;
 
+        // Legacy support: old sessions that were hard-stopped go to emergency page
         if ($session->status === SessionStatus::EmergencyStopped) {
             return redirect()->route('screening.emergency');
         }
@@ -24,7 +25,7 @@ class ScreeningController extends Controller
         $nextQuestion = $service->getNextQuestion($session);
 
         if (!$nextQuestion) {
-            // All questions answered
+            // All questions answered — complete and show result
             $service->completeSession($session);
             return redirect()->route('screening.result');
         }
@@ -32,8 +33,9 @@ class ScreeningController extends Controller
         $progress = ($nextQuestion->sort_order - 1) / 21 * 100;
 
         return view('screening.question', [
-            'question' => $nextQuestion,
-            'progress' => $progress,
+            'question'          => $nextQuestion,
+            'progress'          => $progress,
+            'remaining_seconds' => $request->remaining_seconds ?? 1800,
         ]);
     }
 }

@@ -15,20 +15,22 @@ class SafetyService
         $safetyItem = config('depresense.safety.item_number', self::SAFETY_ITEM);
         $threshold = config('depresense.safety.threshold', self::EMERGENCY_THRESHOLD);
 
-        if ($itemNumber == $safetyItem && $answerValue >= $threshold) {
-            return true;
-        }
-
-        return false;
+        return ($itemNumber == $safetyItem && $answerValue >= $threshold);
     }
 
-    public function triggerEmergency(ScreeningSession $session): void
+    /**
+     * Flag the session as having triggered a safety alert,
+     * but do NOT stop the screening. The user continues answering
+     * all questions and sees the full result + emergency banner.
+     */
+    public function flagSafetyAlert(ScreeningSession $session): void
     {
-        $session->update([
-            'status' => SessionStatus::EmergencyStopped,
-            'emergency_triggered' => true,
-            'emergency_item' => config('depresense.safety.item_number', self::SAFETY_ITEM),
-            'completed_at' => now(),
-        ]);
+        // Only flag once — don't override if already flagged
+        if (!$session->emergency_triggered) {
+            $session->update([
+                'emergency_triggered' => true,
+                'emergency_item' => config('depresense.safety.item_number', self::SAFETY_ITEM),
+            ]);
+        }
     }
 }

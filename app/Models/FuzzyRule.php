@@ -12,12 +12,12 @@ class FuzzyRule extends Model
     protected function casts(): array
     {
         return [
-            'antecedent_total' => DepressionLevel::class,
+            'antecedent_total'     => 'string', // nullable, tidak digunakan di arsitektur 2-input
             'antecedent_cognitive' => DepressionLevel::class,
-            'antecedent_somatic' => DepressionLevel::class,
-            'consequent' => DepressionLevel::class,
-            'is_active' => 'boolean',
-            'rule_number' => 'integer',
+            'antecedent_somatic'   => DepressionLevel::class,
+            'consequent'           => DepressionLevel::class,
+            'is_active'            => 'boolean',
+            'rule_number'          => 'integer',
         ];
     }
 }

@@ -41,4 +41,17 @@ class User extends Authenticatable
     {
         return $this->hasMany(ScreeningSession::class);
     }
+
+    public function articles(): HasMany
+    {
+        return $this->hasMany(\App\Models\Article::class, 'author_id');
+    }
+
+    /**
+     * Accessor for backward compatibility — some views use ->name
+     */
+    public function getNameAttribute(): string
+    {
+        return $this->full_name ?? '';
+    }
 }

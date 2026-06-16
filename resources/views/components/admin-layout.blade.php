@@ -1,0 +1,234 @@
+@props(['title' => null])
+
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <title>{{ $title ?? 'DepreSense - Sistem Pakar Manajemen Kesehatan Mental' }}</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" rel="stylesheet" />
+
+    <!-- Scripts -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .sidebar-item-active {
+            background-color: #ecf5f4;
+            color: #0d7a70;
+            border-right: 4px solid #0d7a70;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 antialiased text-slate-800">
+    <div class="flex min-h-screen" x-data="{ mobileSidebarOpen: false }">
+        
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white border-r border-slate-200 flex-shrink-0 hidden md:flex flex-col fixed h-full">
+            <div class="p-6">
+                <h1 class="text-xl font-bold text-[#0d7a70] tracking-tight">DepreSense</h1>
+                <p class="text-[10px] text-slate-400 font-semibold uppercase tracking-widest mt-1">Admin Management</p>
+            </div>
+
+            <nav class="flex-1 mt-4 overflow-y-auto">
+                <ul class="space-y-1">
+                    <!-- Dashboard -->
+                    <li>
+                        <a href="{{ route('admin.dashboard') }}" 
+                        class="flex items-center px-6 py-3 text-sm font-medium {{ request()->routeIs('admin.dashboard') ? 'sidebar-item-active' : 'text-slate-500 hover:bg-slate-50 hover:text-[#0d7a70]' }} transition-colors">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+                            </svg>
+                            Dashboard
+                        </a>
+                    </li>
+
+                    <!-- Pengguna -->
+                    <li>
+                        <a href="{{ route('admin.users.index') }}" 
+                        class="flex items-center px-6 py-3 text-sm font-medium {{ request()->routeIs('admin.users.*') ? 'sidebar-item-active' : 'text-slate-500 hover:bg-slate-50 hover:text-[#0d7a70]' }} transition-colors">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                            </svg>
+                            Pengguna
+                        </a>
+                    </li>
+
+                    <!-- Pertanyaan -->
+                    <li>
+                        <a href="{{ route('admin.questions.index') }}" 
+                        class="flex items-center px-6 py-3 text-sm font-medium {{ request()->routeIs('admin.questions.*') ? 'sidebar-item-active' : 'text-slate-500 hover:bg-slate-50 hover:text-[#0d7a70]' }} transition-colors">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            Pertanyaan
+                        </a>
+                    </li>
+
+                    <!-- Aturan (Fuzzy Rules) -->
+                    <li>
+                        <a href="{{ route('admin.fuzzy-rules.index') }}" 
+                        class="flex items-center px-6 py-3 text-sm font-medium {{ request()->routeIs('admin.fuzzy-rules.*') ? 'sidebar-item-active' : 'text-slate-500 hover:bg-slate-50 hover:text-[#0d7a70]' }} transition-colors">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                            </svg>
+                            Aturan
+                        </a>
+                    </li>
+
+
+                </ul>
+            </nav>
+
+            <div class="p-6 border-t border-slate-100">
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button class="flex items-center text-sm font-medium text-rose-500 hover:text-rose-700">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                        Keluar
+                    </button>
+                </form>
+            </div>
+        </aside>
+
+        <!-- Mobile Drawer Backdrop -->
+        <div x-show="mobileSidebarOpen" 
+             x-transition:opacity
+             @click="mobileSidebarOpen = false" 
+             class="fixed inset-0 bg-slate-950/40 backdrop-blur-sm z-30 md:hidden" 
+             style="display: none;"></div>
+
+        <!-- Mobile Drawer Sidebar -->
+        <aside x-show="mobileSidebarOpen"
+               x-transition:enter="transition ease-out duration-300 transform"
+               x-transition:enter-start="-translate-x-full"
+               x-transition:enter-end="translate-x-0"
+               x-transition:leave="transition ease-in duration-200 transform"
+               x-transition:leave-start="translate-x-0"
+               x-transition:leave-end="-translate-x-full"
+               class="fixed inset-y-0 left-0 w-64 bg-white border-r border-slate-200 flex flex-col z-40 md:hidden"
+               style="display: none;">
+            
+            <div class="p-6 flex items-center justify-between border-b border-slate-50">
+                <div>
+                    <h1 class="text-xl font-bold text-[#0d7a70] tracking-tight">DepreSense</h1>
+                    <p class="text-[10px] text-slate-400 font-semibold uppercase tracking-widest mt-1">Admin Management</p>
+                </div>
+                <button @click="mobileSidebarOpen = false" class="p-1 rounded-lg text-slate-400 hover:bg-slate-50">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <nav class="flex-1 mt-4 overflow-y-auto">
+                <ul class="space-y-1">
+                    <!-- Dashboard -->
+                    <li>
+                        <a href="{{ route('admin.dashboard') }}" 
+                        class="flex items-center px-6 py-3 text-sm font-medium {{ request()->routeIs('admin.dashboard') ? 'sidebar-item-active' : 'text-slate-500 hover:bg-slate-50 hover:text-[#0d7a70]' }} transition-colors">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                            Dashboard
+                        </a>
+                    </li>
+                    <!-- Pengguna -->
+                    <li>
+                        <a href="{{ route('admin.users.index') }}" 
+                        class="flex items-center px-6 py-3 text-sm font-medium {{ request()->routeIs('admin.users.*') ? 'sidebar-item-active' : 'text-slate-500 hover:bg-slate-50 hover:text-[#0d7a70]' }} transition-colors">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                            Pengguna
+                        </a>
+                    </li>
+                    <!-- Pertanyaan -->
+                    <li>
+                        <a href="{{ route('admin.questions.index') }}" 
+                        class="flex items-center px-6 py-3 text-sm font-medium {{ request()->routeIs('admin.questions.*') ? 'sidebar-item-active' : 'text-slate-500 hover:bg-slate-50 hover:text-[#0d7a70]' }} transition-colors">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            Pertanyaan
+                        </a>
+                    </li>
+                    <!-- Aturan (Fuzzy Rules) -->
+                    <li>
+                        <a href="{{ route('admin.fuzzy-rules.index') }}" 
+                        class="flex items-center px-6 py-3 text-sm font-medium {{ request()->routeIs('admin.fuzzy-rules.*') ? 'sidebar-item-active' : 'text-slate-500 hover:bg-slate-50 hover:text-[#0d7a70]' }} transition-colors">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                            Aturan
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content (Responsive margin-left) -->
+        <div class="flex-1 flex flex-col min-w-0 md:ml-64 w-full">
+            
+            <!-- Header/Navbar -->
+            <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 sticky top-0 z-10 print:hidden">
+                <div class="flex items-center">
+                    <button @click="mobileSidebarOpen = true" class="p-2 -ml-2 mr-2 rounded-xl text-slate-500 hover:bg-slate-50 md:hidden focus:outline-none transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <div class="flex items-center space-x-5">
+                    <div x-data="{ open: false }" @click.away="open = false" class="relative">
+                    <button @click="open = !open" class="flex items-center space-x-3 focus:outline-none group">
+                        <span class="text-sm font-semibold text-slate-700 group-hover:text-[#0d7a70] transition-colors">
+                            {{ Auth::user()->name ?? 'Admin' }}
+                        </span>
+                        <div class="relative">
+                            <img class="h-9 w-9 rounded-full border border-slate-200 bg-slate-100 object-cover group-hover:border-[#0d7a70] transition-colors" 
+                                 src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name ?? 'Admin') }}&background=0d7a70&color=fff" 
+                                 alt="Avatar">
+                            <span class="absolute bottom-0 right-0 block h-2.5 w-2.5 rounded-full bg-emerald-400 ring-2 ring-white"></span>
+                        </div>
+                        <svg class="w-4 h-4 text-slate-400 group-hover:text-[#0d7a70] transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+
+                    <div x-show="open" 
+                         x-transition:enter="transition ease-out duration-100"
+                         x-transition:enter-start="transform opacity-0 scale-95"
+                         x-transition:enter-end="transform opacity-100 scale-100"
+                         x-transition:leave="transition ease-in duration-75"
+                         x-transition:leave-start="transform opacity-100 scale-100"
+                         x-transition:leave-end="transform opacity-0 scale-95"
+                         class="absolute right-0 mt-2 w-48 bg-white border border-slate-100 rounded-xl shadow-lg z-50 py-1 divide-y divide-slate-50"
+                         style="display: none;">
+                        
+                        <div class="px-4 py-2.5">
+                            <p class="text-xs text-slate-400 font-medium">Masuk sebagai</p>
+                            <p class="text-sm font-bold text-slate-700 truncate">{{ Auth::user()->email ?? 'admin@depresense.com' }}</p>
+                        </div>
+
+                        <div class="py-1">
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="w-full text-left flex items-center px-4 py-2.5 text-sm text-rose-500 hover:bg-rose-50 font-semibold transition-colors">
+                                    <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                                    </svg>
+                                    Keluar
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <main class="p-8">
+                {{ $slot }}
+            </main>
+        </div>
+    </div>
+</body>
+</html>

@@ -12,7 +12,7 @@ class ResultController extends Controller
     public function show(Request $request, RecommendationService $recommendationService)
     {
         $session = $request->active_session;
-        
+
         if ($session->status !== SessionStatus::Completed) {
             return redirect()->route('screening.question');
         }
@@ -20,8 +20,9 @@ class ResultController extends Controller
         $recommendations = $recommendationService->getRecommendations($session->depression_level);
 
         return view('screening.result', [
-            'session' => $session,
-            'recommendations' => $recommendations,
+            'session'           => $session,
+            'recommendations'   => $recommendations,
+            'emergencyTriggered' => (bool) $session->emergency_triggered,
         ]);
     }
 }

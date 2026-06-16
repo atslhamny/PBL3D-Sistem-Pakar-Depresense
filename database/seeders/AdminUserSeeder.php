@@ -19,5 +19,14 @@ class AdminUserSeeder extends Seeder
                 'role' => UserRole::Admin,
             ]
         );
+
+        User::firstOrCreate(
+            ['email' => 'user@depresense.id'],
+            [
+                'full_name' => 'Test User',
+                'password' => Hash::make('password123'),
+                'role' => UserRole::User,
+            ]
+        );
     }
 }
