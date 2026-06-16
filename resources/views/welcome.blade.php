@@ -114,9 +114,6 @@
             </div>
 
             <div class="relative pt-4 max-w-4xl mx-auto">
-                <!-- Connecting Line Desktop -->
-                <div class="absolute top-4 sm:top-6 left-[12.5%] right-[12.5%] h-[2px] bg-[#0d7a70]/20 z-0 hidden sm:block"></div>
-
                 <div class="grid grid-cols-4 gap-2 sm:gap-6 lg:gap-8 relative z-10" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));">
                     <div class="flex flex-col items-center space-y-2 sm:space-y-3 text-center">
                         <div class="w-8 h-8 sm:w-12 sm:h-12 rounded-full border-2 border-[#0d7a70] bg-white flex items-center justify-center font-bold text-[#0d7a70] text-xs sm:text-sm shadow-sm relative z-10">
@@ -127,8 +124,6 @@
                     </div>
 
                     <div class="flex flex-col items-center space-y-2 sm:space-y-3 text-center">
-                        <!-- Garis mobile -->
-                        <div class="absolute top-4 left-[-25%] right-[75%] h-[1px] bg-[#0d7a70]/20 z-0 sm:hidden"></div>
                         <div class="w-8 h-8 sm:w-12 sm:h-12 rounded-full border-2 border-[#0d7a70] bg-white flex items-center justify-center font-bold text-[#0d7a70] text-xs sm:text-sm shadow-sm relative z-10">
                             2
                         </div>
@@ -137,8 +132,6 @@
                     </div>
 
                     <div class="flex flex-col items-center space-y-2 sm:space-y-3 text-center">
-                        <!-- Garis mobile -->
-                        <div class="absolute top-4 left-[25%] right-[25%] h-[1px] bg-[#0d7a70]/20 z-0 sm:hidden"></div>
                         <div class="w-8 h-8 sm:w-12 sm:h-12 rounded-full border-2 border-[#0d7a70] bg-white flex items-center justify-center font-bold text-[#0d7a70] text-xs sm:text-sm shadow-sm relative z-10">
                             3
                         </div>
@@ -147,8 +140,6 @@
                     </div>
 
                     <div class="flex flex-col items-center space-y-2 sm:space-y-3 text-center">
-                        <!-- Garis mobile -->
-                        <div class="absolute top-4 left-[75%] right-[-25%] h-[1px] bg-[#0d7a70]/20 z-0 sm:hidden"></div>
                         <div class="w-8 h-8 sm:w-12 sm:h-12 rounded-full border-2 border-[#0d7a70] bg-white flex items-center justify-center font-bold text-[#0d7a70] text-xs sm:text-sm shadow-sm relative z-10">
                             4
                         </div>
