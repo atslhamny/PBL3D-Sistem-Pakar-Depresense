@@ -7,4 +7,6 @@ enum SessionStatus: string
     case InProgress = 'in_progress';
     case Completed = 'completed';
     case EmergencyStopped = 'emergency_stopped';
+    case Expired = 'expired';
 }
+

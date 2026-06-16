@@ -7,7 +7,7 @@
 
     <div x-data="screeningForm({{ $question->id }}, {{ $question->item_number }}, {{ Js::from($question->answer_options) }})" class="w-full">
         {{-- Progress Bar --}}
-        <div class="mb-10">
+        <div class="mb-6">
             <div class="flex justify-between items-end text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-3 px-1">
                 <span>Pertanyaan {{ $question->item_number }} <span class="text-slate-300">/</span> 21</span>
                 <span class="text-[#00aba9]">{{ round($progress) }}%</span>
@@ -15,6 +15,30 @@
             <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden border border-slate-50">
                 <div class="bg-[#00aba9] h-3 rounded-full transition-all duration-700 ease-out shadow-sm shadow-teal-100" 
                      style="width: {{ $progress }}%"></div>
+            </div>
+        </div>
+
+        {{-- Countdown Timer --}}
+        <div x-data="countdownTimer({{ $remaining_seconds ?? 0 }})" class="mb-6">
+            <div
+                class="flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-bold transition-colors duration-500"
+                :class="{
+                    'bg-slate-50 border border-slate-100 text-slate-500': remaining > 300,
+                    'bg-amber-50 border border-amber-200 text-amber-700': remaining <= 300 && remaining > 60,
+                    'bg-red-50 border border-red-200 text-red-600 animate-pulse': remaining <= 60 && remaining > 0,
+                    'bg-red-100 border border-red-300 text-red-700': remaining === 0,
+                }"
+            >
+                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <span x-show="remaining > 0">
+                    Sisa waktu: <span x-text="formattedTime" class="tabular-nums"></span>
+                </span>
+                <span x-show="remaining === 0" class="text-red-600">
+                    Sesi berakhir — mengalihkan...
+                </span>
             </div>
         </div>
 
@@ -99,6 +123,48 @@
 
     <script>
         document.addEventListener('alpine:init', () => {
+
+            // ── Countdown Timer ────────────────────────────────────────────────
+            Alpine.data('countdownTimer', (initialSeconds) => ({
+                remaining: initialSeconds,
+                interval: null,
+
+                get formattedTime() {
+                    const m = String(Math.floor(this.remaining / 60)).padStart(2, '0');
+                    const s = String(this.remaining % 60).padStart(2, '0');
+                    return `${m}:${s}`;
+                },
+
+                init() {
+                    if (this.remaining <= 0) {
+                        this.redirectExpired();
+                        return;
+                    }
+
+                    this.interval = setInterval(() => {
+                        this.remaining -= 1;
+                        if (this.remaining <= 0) {
+                            clearInterval(this.interval);
+                            this.remaining = 0;
+                            this.redirectExpired();
+                        }
+                    }, 1000);
+                },
+
+                redirectExpired() {
+                    // Redirect ke consent dengan flag session_expired via query string
+                    // Middleware akan menghandle expire sesi di server-side
+                    setTimeout(() => {
+                        window.location.href = '{{ route("screening.consent") }}';
+                    }, 1500);
+                },
+
+                destroy() {
+                    if (this.interval) clearInterval(this.interval);
+                }
+            }));
+
+            // ── Screening Form ─────────────────────────────────────────────────
             Alpine.data('screeningForm', (questionId, itemNumber, answerOptions) => ({
                 questionId: questionId,
                 itemNumber: itemNumber,
@@ -134,12 +200,18 @@
                             body: JSON.stringify({
                                 question_id: this.questionId,
                                 item_number: this.itemNumber,
-                                // PERBAIKAN 4: Sekarang `this.selected` sudah murni berisi nilai `option.value` asli backend
                                 answer_value: this.selected 
                             })
                         });
 
                         const data = await response.json();
+
+                        // Middleware mendeteksi sesi expired → ikuti redirect
+                        if (response.status === 403 && data.redirect) {
+                            window.location.href = data.redirect;
+                            return;
+                        }
+
                         if (!response.ok) throw new Error(data.message || 'Gagal menyimpan jawaban.');
 
                         if (data.redirect) {

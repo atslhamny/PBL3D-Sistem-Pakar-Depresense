@@ -12,11 +12,11 @@ class HistoryController extends Controller
         $user = auth()->user();
         
         $query = $user->screeningSessions()
-            ->whereIn('status', ['completed', 'emergency_stopped'])
+            ->whereIn('status', [\App\Enums\SessionStatus::Completed, \App\Enums\SessionStatus::EmergencyStopped])
             ->latest('completed_at');
             
         if ($request->filled('level') && $request->level !== 'Semua') {
-            $query->where('depression_level', strtolower($request->level));
+            $query->where('depression_level', \App\Enums\DepressionLevel::from(strtolower($request->level)));
         }
 
         $sessions = $query->paginate(10)->withQueryString();
@@ -28,7 +28,7 @@ class HistoryController extends Controller
     {
         $user = auth()->user();
         $session = $user->screeningSessions()
-            ->whereIn('status', ['completed', 'emergency_stopped'])
+            ->whereIn('status', [\App\Enums\SessionStatus::Completed, \App\Enums\SessionStatus::EmergencyStopped])
             ->findOrFail($id);
 
         return view('user.insight', compact('session'));

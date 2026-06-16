@@ -20,25 +20,22 @@ class FuzzyEngine
     {
         $params = FuzzyMembershipParam::all()->groupBy('variable_name');
 
-        $totalParams = $this->formatParams($params->get('total', collect()));
         $cognitiveParams = $this->formatParams($params->get('cognitive', collect()));
-        $somaticParams = $this->formatParams($params->get('somatic', collect()));
-        $outputParams = $this->formatParams($params->get('output', collect()));
+        $somaticParams   = $this->formatParams($params->get('somatic', collect()));
+        $outputParams    = $this->formatParams($params->get('output', collect()));
 
-        $fuzzTotal = $this->fuzzification->fuzzify($input->total, $totalParams);
         $fuzzCognitive = $this->fuzzification->fuzzify($input->cognitive, $cognitiveParams);
-        $fuzzSomatic = $this->fuzzification->fuzzify($input->somatic, $somaticParams);
+        $fuzzSomatic   = $this->fuzzification->fuzzify($input->somatic, $somaticParams);
 
         $rules = FuzzyRule::where('is_active', true)->get()->map(function ($rule) {
             return [
-                'antecedent_total' => $rule->antecedent_total->value,
-                'antecedent_cognitive' => $rule->antecedent_cognitive->value,
-                'antecedent_somatic' => $rule->antecedent_somatic->value,
-                'consequent' => $rule->consequent->value,
+                'antecedent_cognitive' => $rule->antecedent_cognitive?->value,
+                'antecedent_somatic'   => $rule->antecedent_somatic?->value,
+                'consequent'           => $rule->consequent?->value,
             ];
         })->toArray();
 
-        $evaluatedRules = $this->ruleEvaluator->evaluate($fuzzTotal, $fuzzCognitive, $fuzzSomatic, $rules);
+        $evaluatedRules = $this->ruleEvaluator->evaluate($fuzzCognitive, $fuzzSomatic, $rules);
 
         $aggregated = $this->aggregator->aggregate($evaluatedRules);
 

@@ -33,8 +33,9 @@ class ScreeningController extends Controller
         $progress = ($nextQuestion->sort_order - 1) / 21 * 100;
 
         return view('screening.question', [
-            'question' => $nextQuestion,
-            'progress' => $progress,
+            'question'          => $nextQuestion,
+            'progress'          => $progress,
+            'remaining_seconds' => $request->remaining_seconds ?? 1800,
         ]);
     }
 }

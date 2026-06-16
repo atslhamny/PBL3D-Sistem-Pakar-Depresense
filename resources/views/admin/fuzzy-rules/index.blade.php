@@ -116,14 +116,6 @@
                             <td class="py-5 px-6">
                                 <div class="flex flex-wrap items-center gap-2">
                                     <div class="flex items-center gap-1.5 px-3 py-1 bg-slate-50 border border-slate-100 rounded-xl text-xs font-medium text-slate-600">
-                                        <span class="text-[9px] font-bold uppercase tracking-wider text-slate-400">Total BDI:</span>
-                                        <span class="font-bold {{ $rule->antecedent_total?->value === 'berat' ? 'text-rose-500' : ($rule->antecedent_total?->value === 'sedang' ? 'text-amber-500' : ($rule->antecedent_total?->value === 'ringan' ? 'text-indigo-500' : ($rule->antecedent_total?->value === 'minimal' ? 'text-emerald-500' : 'text-slate-500'))) }}">
-                                            {{ $rule->antecedent_total ? ucfirst($rule->antecedent_total->value) : 'Any' }}
-                                        </span>
-                                    </div>
-                                    <span class="text-[9px] font-black text-slate-300">AND</span>
-                                    
-                                    <div class="flex items-center gap-1.5 px-3 py-1 bg-slate-50 border border-slate-100 rounded-xl text-xs font-medium text-slate-600">
                                         <span class="text-[9px] font-bold uppercase tracking-wider text-slate-400">Kognitif-Afektif:</span>
                                         <span class="font-bold {{ $rule->antecedent_cognitive?->value === 'berat' ? 'text-rose-500' : ($rule->antecedent_cognitive?->value === 'sedang' ? 'text-amber-500' : ($rule->antecedent_cognitive?->value === 'ringan' ? 'text-indigo-500' : ($rule->antecedent_cognitive?->value === 'minimal' ? 'text-emerald-500' : 'text-slate-500'))) }}">
                                             {{ $rule->antecedent_cognitive ? ucfirst($rule->antecedent_cognitive->value) : 'Any' }}
@@ -162,6 +154,7 @@
                                 <form action="{{ route('admin.fuzzy-rules.update', $rule->id) }}" method="POST" class="inline-block align-middle">
                                     @csrf
                                     @method('PUT')
+                                    <input type="hidden" name="_action" value="toggle">
                                     <input type="hidden" name="is_active" value="{{ $rule->is_active ? 0 : 1 }}">
                                     <button type="submit" 
                                             class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none {{ $rule->is_active ? 'bg-[#0d7a70]' : 'bg-slate-200' }}"
@@ -244,19 +237,6 @@
                         <div>
                             <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Kondisi (JIKA)</p>
                             <div class="bg-slate-50 rounded-2xl border border-slate-100 p-4 space-y-2">
-                                <div class="p-3 bg-white border border-slate-200 rounded-xl flex justify-between items-center">
-                                    <span class="text-xs font-bold text-slate-500">Total Skor BDI</span>
-                                    <span class="inline-flex px-2.5 py-1 rounded-lg text-[9px] font-black uppercase border"
-                                          :class="{
-                                              'bg-rose-50 text-rose-700 border-rose-200': selectedRule.antecedent_total === 'berat',
-                                              'bg-amber-50 text-amber-700 border-amber-200': selectedRule.antecedent_total === 'sedang',
-                                              'bg-indigo-50 text-indigo-600 border-indigo-200': selectedRule.antecedent_total === 'ringan',
-                                              'bg-emerald-50 text-emerald-700 border-emerald-200': selectedRule.antecedent_total === 'minimal',
-                                              'bg-slate-100 text-slate-500 border-slate-200': !selectedRule.antecedent_total
-                                          }"
-                                          x-text="selectedRule.antecedent_total ? selectedRule.antecedent_total.charAt(0).toUpperCase() + selectedRule.antecedent_total.slice(1) : 'ANY'"></span>
-                                </div>
-                                <div class="text-center text-[9px] font-black text-slate-400 uppercase tracking-widest">DAN</div>
                                 <div class="p-3 bg-white border border-slate-200 rounded-xl flex justify-between items-center">
                                     <span class="text-xs font-bold text-slate-500">Kognitif & Afektif</span>
                                     <span class="inline-flex px-2.5 py-1 rounded-lg text-[9px] font-black uppercase border"

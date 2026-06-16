@@ -71,7 +71,7 @@
                         @endphp
                         <tr class="hover:bg-slate-50/50 transition-colors group">
                             <td class="p-6">
-                                <span class="font-bold text-slate-700 block">{{ $session->completed_at ? $session->completed_at->format('d F Y') : '-' }}</span>
+                                <span class="font-bold text-slate-700 block">{{ $session->completed_at ? $session->completed_at->timezone(config('app.timezone'))->translatedFormat('d F Y') : '-' }}</span>
                             </td>
                             <td class="p-6">
                                 <div class="flex items-center">

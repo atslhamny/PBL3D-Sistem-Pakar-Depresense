@@ -44,22 +44,10 @@
                         <h3 class="text-sm font-black text-slate-800 uppercase tracking-wider mb-2">IF (Anteseden)</h3>
                         
                         <div>
-                            <label class="block text-xs font-bold text-slate-500 mb-1">Total Skor Keseluruhan</label>
-                            <select name="antecedent_total"
+                            <label class="block text-xs font-bold text-slate-500 mb-1">Skor Kognitif & Afektif <span class="text-rose-500">*</span></label>
+                            <select name="antecedent_cognitive" required
                                     class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#0d7a70] focus:ring-2 focus:ring-[#0d7a70]/20 transition-all text-sm">
-                                <option value="">(Abaikan / None)</option>
-                                <option value="minimal" {{ old('antecedent_total', $fuzzy_rule->antecedent_total?->value) === 'minimal' ? 'selected' : '' }}>Minimal</option>
-                                <option value="ringan" {{ old('antecedent_total', $fuzzy_rule->antecedent_total?->value) === 'ringan' ? 'selected' : '' }}>Ringan</option>
-                                <option value="sedang" {{ old('antecedent_total', $fuzzy_rule->antecedent_total?->value) === 'sedang' ? 'selected' : '' }}>Sedang</option>
-                                <option value="berat" {{ old('antecedent_total', $fuzzy_rule->antecedent_total?->value) === 'berat' ? 'selected' : '' }}>Berat</option>
-                            </select>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-xs font-bold text-slate-500 mb-1">Skor Kognitif & Afektif</label>
-                            <select name="antecedent_cognitive"
-                                    class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#0d7a70] focus:ring-2 focus:ring-[#0d7a70]/20 transition-all text-sm">
-                                <option value="">(Abaikan / None)</option>
+                                <option value="">Pilih Skor...</option>
                                 <option value="minimal" {{ old('antecedent_cognitive', $fuzzy_rule->antecedent_cognitive?->value) === 'minimal' ? 'selected' : '' }}>Minimal</option>
                                 <option value="ringan" {{ old('antecedent_cognitive', $fuzzy_rule->antecedent_cognitive?->value) === 'ringan' ? 'selected' : '' }}>Ringan</option>
                                 <option value="sedang" {{ old('antecedent_cognitive', $fuzzy_rule->antecedent_cognitive?->value) === 'sedang' ? 'selected' : '' }}>Sedang</option>
@@ -68,10 +56,10 @@
                         </div>
 
                         <div>
-                            <label class="block text-xs font-bold text-slate-500 mb-1">Skor Somatik</label>
-                            <select name="antecedent_somatic"
+                            <label class="block text-xs font-bold text-slate-500 mb-1">Skor Somatik <span class="text-rose-500">*</span></label>
+                            <select name="antecedent_somatic" required
                                     class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#0d7a70] focus:ring-2 focus:ring-[#0d7a70]/20 transition-all text-sm">
-                                <option value="">(Abaikan / None)</option>
+                                <option value="">Pilih Skor...</option>
                                 <option value="minimal" {{ old('antecedent_somatic', $fuzzy_rule->antecedent_somatic?->value) === 'minimal' ? 'selected' : '' }}>Minimal</option>
                                 <option value="ringan" {{ old('antecedent_somatic', $fuzzy_rule->antecedent_somatic?->value) === 'ringan' ? 'selected' : '' }}>Ringan</option>
                                 <option value="sedang" {{ old('antecedent_somatic', $fuzzy_rule->antecedent_somatic?->value) === 'sedang' ? 'selected' : '' }}>Sedang</option>

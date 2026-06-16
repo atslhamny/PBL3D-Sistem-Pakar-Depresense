@@ -10,12 +10,12 @@ class DashboardController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $latestSession = $user->screeningSessions()->where('status', 'completed')->latest('completed_at')->first();
+        $latestSession = $user->screeningSessions()->where('status', \App\Enums\SessionStatus::Completed)->latest('completed_at')->first();
         
         $chartData = null;
         if ($latestSession) {
             $sessions = $user->screeningSessions()
-                ->where('status', 'completed')
+                ->where('status', \App\Enums\SessionStatus::Completed)
                 ->latest('completed_at')
                 ->take(5)
                 ->get()
@@ -27,6 +27,13 @@ class DashboardController extends Controller
             ];
         }
 
-        return view('user.dashboard', compact('latestSession', 'chartData'));
+        $activeSession = $user->screeningSessions()
+            ->where('status', \App\Enums\SessionStatus::InProgress)
+            ->whereNotNull('expires_at')
+            ->where('expires_at', '>', now())
+            ->latest()
+            ->first();
+
+        return view('user.dashboard', compact('latestSession', 'chartData', 'activeSession'));
     }
 }

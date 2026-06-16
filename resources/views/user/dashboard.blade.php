@@ -22,9 +22,29 @@
         </a>
     </div>
 
+    {{-- Banner Lanjutkan Sesi (Jika ada sesi terputus) --}}
+    @if(isset($activeSession))
+        <div class="mb-8 p-6 bg-orange-50 border border-orange-200 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm">
+            <div class="flex items-center gap-4">
+                <div class="p-3 bg-orange-100 text-orange-600 rounded-full flex-shrink-0">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-orange-800">Sesi Assessment Belum Selesai</h3>
+                    <p class="text-xs text-orange-700 mt-1">Anda memiliki sesi pengisian kuesioner yang terputus. Waktu Anda tersisa sekitar <strong>{{ floor(now()->diffInSeconds($activeSession->expires_at) / 60) }} menit</strong>.</p>
+                </div>
+            </div>
+            <a href="{{ route('screening.question') }}" class="px-5 py-2.5 bg-orange-500 hover:bg-orange-600 text-white text-sm font-bold rounded-xl transition-all shadow-sm shadow-orange-200 flex-shrink-0">
+                Lanjutkan Pengisian
+            </a>
+        </div>
+    @endif
+
     {{-- Logika Kondisi Berdasarkan Riwayat Assessment --}}
     @if($latestSession)
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
             
             {{-- Card STATUS SAAT INI --}}
             <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between min-h-[200px]">
@@ -57,8 +77,7 @@
                         }
                     @endphp
 
-                    <span class="inline-flex items-center px-3 py-1 rounded-full border text-xs font-bold capitalize {{ $badgeClass }} mb-3">
-                        <span class="h-1.5 w-1.5 rounded-full bg-currentColor mr-2"></span>
+                    <span class="inline-flex justify-center items-center w-max px-4 py-1.5 rounded-full border text-sm font-bold capitalize {{ $badgeClass }} mb-3">
                         {{ $latestSession->depression_level->value ?? 'Tidak Diketahui' }}
                     </span>
                     
@@ -69,30 +88,18 @@
                 
                 <div class="text-[10px] text-slate-400 font-medium pt-3 border-t border-slate-50">
                     {{-- Proteksi Carbon format jika completed_at berupa string --}}
-                    Terakhir diperbarui: {{ $latestSession->completed_at ? \Carbon\Carbon::parse($latestSession->completed_at)->format('d M, H:i') : '-' }}
+                    Terakhir diperbarui: {{ $latestSession->completed_at ? \Carbon\Carbon::parse($latestSession->completed_at)->timezone(config('app.timezone'))->translatedFormat('d M Y, H:i') : '-' }}
                 </div>
             </div>
 
-            {{-- Card SKOR TERAKHIR --}}
-            <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between">
-                <div>
-                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Skor Terakhir</span>
-                    <span class="text-4xl font-extrabold text-slate-800">{{ $latestSession->score_total }}</span>
-                </div>
-                <div class="bg-slate-50 p-2.5 rounded-xl flex items-center text-[11px] text-slate-500 font-medium">
-                    <svg class="w-3.5 h-3.5 mr-1.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                    Skor berdasarkan kuesioner BDI-II
-                </div>
-            </div>
+
 
             {{-- Card TANGGAL PENILAIAN --}}
             <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between">
                 <div>
                     <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Tanggal Assessment</span>
-                    <span class="text-lg font-bold text-slate-700 block mt-2">{{ $latestSession->completed_at ? \Carbon\Carbon::parse($latestSession->completed_at)->format('d M Y') : '-' }}</span>
-                    <span class="text-xs text-slate-400">Pukul {{ $latestSession->completed_at ? \Carbon\Carbon::parse($latestSession->completed_at)->format('H:i') : '-' }} WIB</span>
+                    <span class="text-lg font-bold text-slate-700 block mt-2">{{ $latestSession->completed_at ? \Carbon\Carbon::parse($latestSession->completed_at)->timezone(config('app.timezone'))->translatedFormat('d F Y') : '-' }}</span>
+                    <span class="text-xs text-slate-400">Pukul {{ $latestSession->completed_at ? \Carbon\Carbon::parse($latestSession->completed_at)->timezone(config('app.timezone'))->format('H:i') : '-' }} WIB</span>
                 </div>
                 <div class="text-[11px] text-slate-400">
                     Sesi tersimpan secara aman
@@ -122,10 +129,7 @@
                     <p class="text-xs font-bold text-[#0d7a70] mb-1">{{ $recTitle }}</p>
                     <p class="text-[11px] text-slate-500 leading-relaxed">{{ $recDesc }}</p>
                 </div>
-                <a href="{{ route('user.resource') }}" class="text-xs font-bold text-[#0d7a70] hover:underline flex items-center">
-                    Buka Panduan
-                    <svg class="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                </a>
+
             </div>
 
         </div>

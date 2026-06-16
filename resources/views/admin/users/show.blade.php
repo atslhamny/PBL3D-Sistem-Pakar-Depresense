@@ -53,7 +53,7 @@
                     </div>
                     <div class="flex justify-between items-center py-2.5 border-b border-slate-50">
                         <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Semester</span>
-                        <span class="text-xs font-semibold text-slate-700">{{ $user->semester ? $user->semester . ' — ' . $user->semester : 'Tidak diisi' }}</span>
+                        <span class="text-xs font-semibold text-slate-700">{{ $user->semester ? 'Semester ' . $user->semester : 'Tidak diisi' }}</span>
                     </div>
                     <div class="flex justify-between items-center py-2.5">
                         <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Bergabung</span>

@@ -29,7 +29,7 @@ class ScreeningService
         $answers = $session->answers()->with('question')->get();
         $scores = $this->scoringService->calculateScores($answers);
         
-        $fuzzyInput = new FuzzyInput($scores['total'], $scores['cognitive'], $scores['somatic']);
+        $fuzzyInput = new FuzzyInput($scores['cognitive'], $scores['somatic']);
         $fuzzyResult = $this->fuzzyEngine->run($fuzzyInput);
 
         $session->update([

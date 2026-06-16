@@ -27,7 +27,7 @@ class DashboardController extends Controller
             
         $realBerat = ScreeningSession::where('status', \App\Enums\SessionStatus::Completed)
             ->where('depression_level', \App\Enums\DepressionLevel::Berat)
-            ->count() + $realEmergency;
+            ->count();
 
         // 2. High-fidelity statistics (Real Database only)
         $total_users = $realUsers;
@@ -104,24 +104,27 @@ class DashboardController extends Controller
                 $levelStr = $session->depression_level ? ucfirst($session->depression_level->value) : 'Berat (Kritis)';
                 $scoreStr = $session->score_total !== null ? $session->score_total : 'Kritis';
                 return [
-                    'name' => $session->user->name ?? 'Pengguna Anonim',
-                    'university' => $session->user->university ?? 'Universitas tidak diset',
-                    'score' => $scoreStr,
-                    'level' => $levelStr,
-                    'status' => $session->status === \App\Enums\SessionStatus::EmergencyStopped ? 'Memburuk' : ($session->score_total > 15 ? 'Meningkat' : 'Stabil')
+                    'name'       => $session->user?->name ?? 'Pengguna Anonim',
+                    'university' => $session->user?->university ?? 'Universitas tidak diset',
+                    'score'      => $scoreStr,
+                    'level'      => $levelStr,
+                    'status'     => $session->status === \App\Enums\SessionStatus::EmergencyStopped
+                                        ? 'Memburuk'
+                                        : ($session->score_total > 15 ? 'Meningkat' : 'Stabil')
                 ];
             });
 
         // 6. Aktivitas Terbaru (100% DB-connected)
-        $recentActivities = \App\Models\AuditLog::with('admin')
-            ->orderBy('created_at', 'desc')
+        $recentActivities = \App\Models\ScreeningSession::with('user')
+            ->whereIn('status', [\App\Enums\SessionStatus::Completed, \App\Enums\SessionStatus::EmergencyStopped])
+            ->orderBy('completed_at', 'desc')
             ->take(3)
             ->get()
-            ->map(function ($log) {
+            ->map(function ($session) {
                 return [
-                    'time' => $log->created_at->format('h:i A'),
-                    'activity' => $log->action === 'POST' ? 'Menambahkan Data' : ($log->action === 'DELETE' ? 'Menghapus Data' : 'Mengubah Aturan R' . sprintf('%03d', $log->entity_id)),
-                    'user' => $log->admin->name ?? 'Admin'
+                    'time' => $session->completed_at ? $session->completed_at->timezone(config('app.timezone'))->format('H:i') : '-',
+                    'activity' => 'Menyelesaikan Skrining (Skor: ' . ($session->score_total ?? '-') . ')',
+                    'user' => $session->user ? $session->user->full_name : 'Guest (Anonim)'
                 ];
             });
 
@@ -136,7 +139,7 @@ class DashboardController extends Controller
             'Kasus Depresi Tinggi' => ScreeningSession::emergency()->count(),
         ];
 
-        $levelDistribution = ScreeningSession::where('status', 'completed')
+        $levelDistribution = ScreeningSession::where('status', \App\Enums\SessionStatus::Completed)
             ->select('depression_level', DB::raw('count(*) as count'))
             ->groupBy('depression_level')
             ->pluck('count', 'depression_level')

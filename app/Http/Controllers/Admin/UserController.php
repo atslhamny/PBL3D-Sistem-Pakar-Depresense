@@ -19,8 +19,8 @@ class UserController extends Controller
                 $q->latest()->limit(1);
             }]);
 
-        // Search by name or email
-        if ($request->filled('search')) {
+        // Search by name or email — minimum 3 characters required
+        if ($request->filled('search') && strlen($request->search) >= 3) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('full_name', 'like', "%{$search}%")

@@ -35,7 +35,9 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
         <div class="bg-white p-5 rounded-[1.5rem] border border-slate-100 shadow-sm flex items-center gap-4">
             <div class="p-3 bg-[#ecf5f4] rounded-2xl text-[#0d7a70]">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                </svg>
             </div>
             <div>
                 <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Pengguna</p>
@@ -65,22 +67,37 @@
     {{-- Search & Filter --}}
     <div class="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden">
         <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row gap-3">
-            <form method="GET" action="{{ route('admin.users.index') }}" class="flex flex-1 gap-3 flex-wrap">
+            <form method="GET" action="{{ route('admin.users.index') }}" class="flex flex-1 gap-3 flex-wrap"
+                  x-data="{
+                      search: '{{ request('search') }}',
+                      get canSearch() { return this.search.length === 0 || this.search.length >= 3; },
+                      get charCount() { return this.search.length; }
+                  }"
+                  @submit.prevent="canSearch && $el.submit()">
                 <div class="relative flex-1 min-w-[200px]">
                     <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                    <input type="text" name="search" value="{{ request('search') }}"
-                        placeholder="Cari nama atau email..."
-                        class="w-full pl-10 pr-4 py-2.5 text-sm border border-slate-200 rounded-xl focus:outline-none focus:border-[#0d7a70] focus:ring-1 focus:ring-[#0d7a70]/20 transition-colors">
+                    <input type="text" name="search"
+                        x-model="search"
+                        @input.debounce.400ms="canSearch && $el.closest('form').submit()"
+                        value="{{ request('search') }}"
+                        placeholder="Cari nama atau email (min. 3 huruf)..."
+                        class="w-full pl-10 pr-4 py-2.5 text-sm border border-slate-200 rounded-xl focus:outline-none focus:border-[#0d7a70] focus:ring-1 focus:ring-[#0d7a70]/20 transition-colors"
+                        :class="search.length > 0 && search.length < 3 ? 'border-amber-400 ring-1 ring-amber-300/40' : ''">
+                    {{-- Live hint --}}
+                    <div x-show="search.length > 0 && search.length < 3"
+                         class="absolute left-0 -bottom-6 text-[10px] font-semibold text-amber-600 flex items-center gap-1">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        Ketik minimal 3 huruf untuk mencari (<span x-text="3 - charCount"></span> lagi)
+                    </div>
                 </div>
-                <select name="status" class="px-4 py-2.5 text-sm border border-slate-200 rounded-xl focus:outline-none focus:border-[#0d7a70] bg-white text-slate-600 font-medium">
+                <select name="status" 
+                        @change="canSearch && $el.closest('form').submit()"
+                        class="px-4 py-2.5 text-sm border border-slate-200 rounded-xl focus:outline-none focus:border-[#0d7a70] bg-white text-slate-600 font-medium">
                     <option value="">Semua Status</option>
                     <option value="perlu_perhatian" {{ request('status') === 'perlu_perhatian' ? 'selected' : '' }}>Perlu Perhatian</option>
                     <option value="stabil" {{ request('status') === 'stabil' ? 'selected' : '' }}>Stabil</option>
                     <option value="belum_screening" {{ request('status') === 'belum_screening' ? 'selected' : '' }}>Belum Skrining</option>
                 </select>
-                <button type="submit" class="px-5 py-2.5 bg-[#0d7a70] text-white text-sm font-semibold rounded-xl hover:bg-[#0a635b] transition-colors">
-                    Cari
-                </button>
                 @if(request('search') || request('status'))
                 <a href="{{ route('admin.users.index') }}" class="px-5 py-2.5 bg-slate-100 text-slate-600 text-sm font-semibold rounded-xl hover:bg-slate-200 transition-colors">
                     Reset
