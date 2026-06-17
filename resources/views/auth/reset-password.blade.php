@@ -28,7 +28,7 @@
             <div class="relative">
                 <input id="password" class="block w-full px-4 py-3 bg-slate-50 border-slate-100 focus:border-[#00aba9] focus:ring-[#00aba9] rounded-2xl shadow-sm text-sm"
                                 :type="showPw ? 'text' : 'password'"
-                                name="password" placeholder="contoh: rahasia123 (minimal 8 karakter)"
+                                name="password" placeholder="(minimal 8 karakter)"
                                 required autocomplete="new-password" />
                 <button type="button" @click="showPw = !showPw" class="absolute inset-y-0 right-0 px-4 flex items-center text-slate-400 hover:text-[#00aba9] focus:outline-none transition-colors">
                     <svg x-show="!showPw" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
