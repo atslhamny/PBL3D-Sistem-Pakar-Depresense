@@ -157,7 +157,7 @@
                 <div class="w-8 h-8 rounded-full bg-teal-50 text-teal-600 flex items-center justify-center mr-3">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path></svg>
                 </div>
-                <h4 class="font-bold text-slate-800">Sistem Pakar</h4>
+                <h4 class="font-bold text-slate-800">Indikasi</h4>
             </div>
             <p class="text-sm text-slate-500 leading-relaxed">
                 Berdasarkan analisis sistem terhadap pola jawaban Anda, tingkat keparahan kondisi Anda berada pada skor <strong>{{ $session->fuzzy_centroid_value }}</strong>. Hasil ini menempatkan Anda pada kategori indikasi <strong>{{ strtoupper($session->depression_level?->value ?? 'N/A') }}</strong>.
