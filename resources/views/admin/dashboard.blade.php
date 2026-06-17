@@ -50,18 +50,25 @@
             <p class="text-sm text-slate-600 mt-1">Dicetak otomatis oleh sistem pada: {{ date('d M Y, H:i') }}</p>
         </div>
 
-        <!-- Peringatan Sistem Box -->
-        <div class="mb-8 p-5 bg-[#fdf2f2] border border-[#f5c6cb]/40 rounded-2xl flex items-start break-inside-avoid shadow-sm text-slate-800">
-            <div class="bg-rose-100 p-3 rounded-2xl mr-4 text-[#b91c1c] print:hidden flex-shrink-0">
+        <!-- Peringatan Sistem Box — Dinamis dari DB -->
+        @php
+            $isAlert = count($warnings) > 1 || (isset($warnings[0]) && !str_contains($warnings[0], 'Tidak ada'));
+        @endphp
+        <div class="mb-8 p-5 {{ $isAlert ? 'bg-[#fdf2f2] border-[#f5c6cb]/40' : 'bg-slate-50 border-slate-200' }} border rounded-2xl flex items-start break-inside-avoid shadow-sm text-slate-800">
+            <div class="{{ $isAlert ? 'bg-rose-100 text-[#b91c1c]' : 'bg-slate-100 text-slate-400' }} p-3 rounded-2xl mr-4 print:hidden flex-shrink-0">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
                 </svg>
             </div>
             <div>
-                <h4 class="text-sm font-bold text-[#b91c1c] flex items-center gap-1.5 uppercase tracking-wider">Peringatan Sistem</h4>
-                <ul class="text-xs text-[#b91c1c] mt-1.5 space-y-1.5 font-semibold">
-                    <li class="flex items-center"><span class="h-1.5 w-1.5 bg-[#b91c1c] rounded-full mr-2"></span>Jumlah depresi berat meningkat minggu ini</li>
-                    <li class="flex items-center"><span class="h-1.5 w-1.5 bg-[#b91c1c] rounded-full mr-2"></span>Beberapa pengguna menunjukkan tren memburuk</li>
+                <h4 class="text-sm font-bold {{ $isAlert ? 'text-[#b91c1c]' : 'text-slate-500' }} flex items-center gap-1.5 uppercase tracking-wider">Peringatan Sistem</h4>
+                <ul class="text-xs {{ $isAlert ? 'text-[#b91c1c]' : 'text-slate-400' }} mt-1.5 space-y-1.5 font-semibold">
+                    @foreach($warnings as $warn)
+                        <li class="flex items-center">
+                            <span class="h-1.5 w-1.5 {{ $isAlert ? 'bg-[#b91c1c]' : 'bg-slate-300' }} rounded-full mr-2 flex-shrink-0"></span>
+                            {{ $warn }}
+                        </li>
+                    @endforeach
                 </ul>
             </div>
         </div>
@@ -80,9 +87,14 @@
                         <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Total Pengguna</p>
                         <h3 class="text-2xl font-bold text-[#0d7a70] mt-1.5 flex items-center gap-2">
                             {{ number_format($stats['total_users']) }}
-                            <span class="text-emerald-500 text-xs font-bold flex items-center bg-emerald-50 px-2 py-0.5 rounded-lg border border-emerald-100">↑12%</span>
+                            @php $uc = $stats['user_change']; @endphp
+                            @if($uc != 0)
+                            <span class="{{ $uc > 0 ? 'text-emerald-500 bg-emerald-50 border-emerald-100' : 'text-rose-500 bg-rose-50 border-rose-100' }} text-xs font-bold flex items-center px-2 py-0.5 rounded-lg border">
+                                {{ $uc > 0 ? '↑' : '↓' }}{{ abs($uc) }}%
+                            </span>
+                            @endif
                         </h3>
-                        <p class="text-[10px] text-slate-400 mt-2 font-semibold">dibandingkan periode sebelumnya</p>
+                        <p class="text-[10px] text-slate-400 mt-2 font-semibold">dibandingkan 7 hari lalu</p>
                     </div>
                 </div>
                 <!-- Faint Silhouette Background Icon -->
@@ -105,9 +117,14 @@
                         <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Total Penilaian</p>
                         <h3 class="text-2xl font-bold text-slate-800 mt-1.5 flex items-center gap-2">
                             {{ number_format($stats['total_screenings']) }}
-                            <span class="text-emerald-500 text-xs font-bold flex items-center bg-emerald-50 px-2 py-0.5 rounded-lg border border-emerald-100">↑8%</span>
+                            @php $sc = $stats['screening_change']; @endphp
+                            @if($sc != 0)
+                            <span class="{{ $sc > 0 ? 'text-emerald-500 bg-emerald-50 border-emerald-100' : 'text-rose-500 bg-rose-50 border-rose-100' }} text-xs font-bold flex items-center px-2 py-0.5 rounded-lg border">
+                                {{ $sc > 0 ? '↑' : '↓' }}{{ abs($sc) }}%
+                            </span>
+                            @endif
                         </h3>
-                        <p class="text-[10px] text-slate-400 mt-2 font-semibold">dibandingkan periode sebelumnya</p>
+                        <p class="text-[10px] text-slate-400 mt-2 font-semibold">dibandingkan 7 hari lalu</p>
                     </div>
                 </div>
                 <!-- Faint Silhouette Background Icon -->
@@ -130,9 +147,14 @@
                         <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Persentase Depresi Tinggi</p>
                         <h3 class="text-2xl font-bold text-rose-600 mt-1.5 flex items-center gap-2">
                             {{ $stats['high_depression_percentage'] }}%
-                            <span class="text-rose-500 text-xs font-bold flex items-center bg-rose-50 px-2 py-0.5 rounded-lg border border-rose-100">↑2%</span>
+                            @php $bc = $stats['berat_change']; @endphp
+                            @if($bc != 0)
+                            <span class="{{ $bc > 0 ? 'text-rose-500 bg-rose-50 border-rose-100' : 'text-emerald-500 bg-emerald-50 border-emerald-100' }} text-xs font-bold flex items-center px-2 py-0.5 rounded-lg border">
+                                {{ $bc > 0 ? '↑' : '↓' }}{{ abs($bc) }}%
+                            </span>
+                            @endif
                         </h3>
-                        <p class="text-[10px] text-slate-400 mt-2 font-semibold">dibandingkan periode sebelumnya</p>
+                        <p class="text-[10px] text-slate-400 mt-2 font-semibold">dari sesi selesai, 7 hari lalu</p>
                     </div>
                 </div>
                 <!-- Faint Silhouette Background Icon -->
@@ -187,7 +209,11 @@
                     </div>
                 </div>
                 <!-- Custom Horizontal Legend below the Bar Chart -->
-                <div class="flex justify-center items-center gap-6 mt-4 text-xs font-semibold text-slate-500">
+                <div class="flex flex-wrap justify-center items-center gap-4 mt-4 text-xs font-semibold text-slate-500">
+                    <span class="flex items-center gap-2">
+                        <span class="w-3.5 h-3.5 bg-[#a7f3d0] rounded"></span>
+                        Minimal
+                    </span>
                     <span class="flex items-center gap-2">
                         <span class="w-3.5 h-3.5 bg-[#72d392] rounded"></span>
                         Ringan
@@ -214,15 +240,22 @@
                 </div>
                 
                 <div class="my-6 space-y-3">
-                    <!-- Bar 1 (White rounded bar matching screenshot) -->
-                    <div class="bg-white border border-slate-200/60 px-5 py-3.5 rounded-2xl shadow-sm text-sm font-medium text-slate-700 w-full">
-                        Mayoritas pengguna mengalami gejala utama pada kategori <span class="text-[#0d7a70] font-bold">emosi</span>.
-                    </div>
-                    
-                    <!-- Bar 2 (Soft light yellow rounded bar matching screenshot) -->
-                    <div class="bg-[#fffcf4] border border-[#f1e7bc]/60 px-5 py-3.5 rounded-2xl shadow-sm text-sm font-medium text-slate-700 w-full">
-                        Terjadi <span class="text-[#b91c1c] font-bold">peningkatan</span> pada kategori tingkat depresi sedang.
-                    </div>
+                    @forelse($insights as $insight)
+                        @php
+                            $insightStyle = match($insight['type']) {
+                                'warning' => 'bg-[#fffcf4] border-[#f1e7bc]/60',
+                                'good'    => 'bg-emerald-50 border-emerald-100',
+                                default   => 'bg-white border-slate-200/60',
+                            };
+                        @endphp
+                        <div class="{{ $insightStyle }} border px-5 py-3.5 rounded-2xl shadow-sm text-sm font-medium text-slate-700 w-full">
+                            {!! $insight['message'] !!}
+                        </div>
+                    @empty
+                        <div class="bg-white border border-slate-200/60 px-5 py-3.5 rounded-2xl shadow-sm text-sm font-medium text-slate-400 w-full">
+                            Belum ada data penilaian yang cukup untuk menghasilkan insight.
+                        </div>
+                    @endforelse
                 </div>
 
                 <div class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-2">
@@ -428,9 +461,10 @@
                             label: 'Jumlah Kasus',
                             data: chartValues,
                             backgroundColor: [
-                                '#72d392', // Emerald
-                                '#cbd5e1', // Gray/Slate
-                                '#fda4af', // Rose
+                                '#a7f3d0', // Emerald light (Minimal)
+                                '#72d392', // Emerald (Ringan)
+                                '#cbd5e1', // Gray/Slate (Sedang)
+                                '#fda4af', // Rose (Berat)
                             ],
                             borderRadius: 12,
                             barThickness: 32,

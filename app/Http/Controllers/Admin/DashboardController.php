@@ -12,45 +12,125 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // 1. Real database counts
-        $realUsers = User::where('role', 'user')->count();
+        // ── 1. Basis penghitungan real dari DB ──────────────────────────────
+        $realUsers      = User::where('role', 'user')->count();
         $realScreenings = ScreeningSession::count();
-        $realEmergency = ScreeningSession::emergency()->count();
-        
-        $realRingan = ScreeningSession::where('status', \App\Enums\SessionStatus::Completed)
-            ->whereIn('depression_level', [\App\Enums\DepressionLevel::Ringan, \App\Enums\DepressionLevel::Minimal])
-            ->count();
-            
-        $realSedang = ScreeningSession::where('status', \App\Enums\SessionStatus::Completed)
-            ->where('depression_level', \App\Enums\DepressionLevel::Sedang)
-            ->count();
-            
-        $realBerat = ScreeningSession::where('status', \App\Enums\SessionStatus::Completed)
-            ->where('depression_level', \App\Enums\DepressionLevel::Berat)
-            ->count();
+        $realEmergency  = ScreeningSession::emergency()->count();
 
-        // 2. High-fidelity statistics (Real Database only)
-        $total_users = $realUsers;
-        $total_screenings = $realScreenings;
-        $high_dep_percent = $total_screenings > 0 ? round(($realBerat / $total_screenings) * 100) : 0;
+        // Hanya sesi selesai (completed) yang relevan untuk distribusi tingkat
+        $completedSessions = ScreeningSession::where('status', \App\Enums\SessionStatus::Completed)->count();
+
+        $realMinimal = ScreeningSession::where('status', \App\Enums\SessionStatus::Completed)
+            ->where('depression_level', \App\Enums\DepressionLevel::Minimal)->count();
+
+        $realRingan  = ScreeningSession::where('status', \App\Enums\SessionStatus::Completed)
+            ->where('depression_level', \App\Enums\DepressionLevel::Ringan)->count();
+
+        $realSedang  = ScreeningSession::where('status', \App\Enums\SessionStatus::Completed)
+            ->where('depression_level', \App\Enums\DepressionLevel::Sedang)->count();
+
+        $realBerat   = ScreeningSession::where('status', \App\Enums\SessionStatus::Completed)
+            ->where('depression_level', \App\Enums\DepressionLevel::Berat)->count();
+
+        // ── 2. Perubahan minggu ini vs. 7 hari lalu (untuk badge ↑/↓) ───────
+        $thisWeekStart = now()->subDays(6)->startOfDay();
+        $lastWeekStart = now()->subDays(13)->startOfDay();
+        $lastWeekEnd   = now()->subDays(7)->endOfDay();
+
+        $usersThisWeek = User::where('role', 'user')
+            ->where('created_at', '>=', $thisWeekStart)->count();
+        $usersLastWeek = User::where('role', 'user')
+            ->whereBetween('created_at', [$lastWeekStart, $lastWeekEnd])->count();
+
+        $screeningsThisWeek = ScreeningSession::where('created_at', '>=', $thisWeekStart)->count();
+        $screeningsLastWeek = ScreeningSession::whereBetween('created_at', [$lastWeekStart, $lastWeekEnd])->count();
+
+        $beratThisWeek = ScreeningSession::where('status', \App\Enums\SessionStatus::Completed)
+            ->where('depression_level', \App\Enums\DepressionLevel::Berat)
+            ->where('created_at', '>=', $thisWeekStart)->count();
+        $beratLastWeek = ScreeningSession::where('status', \App\Enums\SessionStatus::Completed)
+            ->where('depression_level', \App\Enums\DepressionLevel::Berat)
+            ->whereBetween('created_at', [$lastWeekStart, $lastWeekEnd])->count();
+
+        // Helper closure: hitung selisih persentase antara dua periode
+        $calcChange = fn($now, $prev) => $prev > 0 ? round((($now - $prev) / $prev) * 100) : ($now > 0 ? 100 : 0);
+
+        $userChangePercent      = $calcChange($usersThisWeek, $usersLastWeek);
+        $screeningChangePercent = $calcChange($screeningsThisWeek, $screeningsLastWeek);
+        $beratChangePercent     = $calcChange($beratThisWeek, $beratLastWeek);
+
+        // ── 3. Statistik cards ───────────────────────────────────────────────
+        // Denominator persentase depresi tinggi: hanya sesi completed
+        $high_dep_percent = $completedSessions > 0
+            ? round(($realBerat / $completedSessions) * 100)
+            : 0;
 
         $stats = [
-            'total_users' => $total_users,
-            'total_screenings' => $total_screenings,
-            'emergency_cases' => $realEmergency,
-            'high_depression_percentage' => $high_dep_percent
+            'total_users'               => $realUsers,
+            'total_screenings'          => $realScreenings,
+            'emergency_cases'           => $realEmergency,
+            'high_depression_percentage'=> $high_dep_percent,
+            // Badge perubahan (int, bisa negatif)
+            'user_change'               => $userChangePercent,
+            'screening_change'          => $screeningChangePercent,
+            'berat_change'              => $beratChangePercent,
         ];
-        
-        // 3. Distribusi Chart Data (Bar Chart) - 100% connected to DB
+
+        // ── 4. Distribusi Chart Data (Bar Chart) — hanya completed ──────────
         $chartData = [
-            'labels' => ['Ringan', 'Sedang', 'Berat'],
-            'data' => [
-                $realRingan,
-                $realSedang,
-                $realBerat
-            ]
+            'labels' => ['Minimal', 'Ringan', 'Sedang', 'Berat'],
+            'data'   => [$realMinimal, $realRingan, $realSedang, $realBerat],
         ];
-        
+
+        // ── 5. Peringatan Sistem — dinamis berdasarkan kondisi real ──────────
+        $warnings = [];
+        if ($beratChangePercent > 0) {
+            $warnings[] = "Kasus depresi berat meningkat {$beratChangePercent}% dibanding minggu lalu.";
+        }
+        if ($realEmergency > 0) {
+            $warnings[] = "Terdapat {$realEmergency} sesi dengan indikasi darurat yang perlu ditindaklanjuti.";
+        }
+        if ($realSedang > 0 && $completedSessions > 0 && round(($realSedang / $completedSessions) * 100) >= 30) {
+            $warnings[] = "Lebih dari 30% pengguna berada di tingkat depresi sedang.";
+        }
+        // Fallback jika tidak ada peringatan nyata
+        if (empty($warnings)) {
+            $warnings[] = "Tidak ada peringatan kritis saat ini. Pantau secara berkala.";
+        }
+
+        // ── 6. Insight Utama — dinamis dari data real ────────────────────────
+        $dominantLevel = 'minimal';
+        $dominantCount = $realMinimal;
+        foreach (['ringan' => $realRingan, 'sedang' => $realSedang, 'berat' => $realBerat] as $lvl => $cnt) {
+            if ($cnt > $dominantCount) { $dominantCount = $cnt; $dominantLevel = $lvl; }
+        }
+
+        $insights = [];
+        if ($completedSessions > 0) {
+            $insights[] = [
+                'type'    => 'neutral',
+                'message' => "Mayoritas pengguna memiliki tingkat indikasi depresi <strong class=\"text-[#0d7a70]\">{$dominantLevel}</strong> "
+                           . "({$dominantCount} dari {$completedSessions} sesi selesai).",
+            ];
+        }
+        if ($beratChangePercent > 0) {
+            $insights[] = [
+                'type'    => 'warning',
+                'message' => "Terjadi <strong class=\"text-[#b91c1c]\">peningkatan {$beratChangePercent}%</strong> pada kategori depresi berat minggu ini.",
+            ];
+        } elseif ($beratChangePercent < 0) {
+            $absChange = abs($beratChangePercent);
+            $insights[] = [
+                'type'    => 'good',
+                'message' => "Kasus depresi berat <strong class=\"text-emerald-600\">turun {$absChange}%</strong> dibanding minggu lalu.",
+            ];
+        } else {
+            $insights[] = [
+                'type'    => 'neutral',
+                'message' => "Tingkat kasus depresi berat <strong class=\"text-slate-600\">stabil</strong> dibanding minggu lalu.",
+            ];
+        }
+
         $filter = (int) request()->query('filter', 7);
         if (!in_array($filter, [7, 14, 30])) {
             $filter = 7;
@@ -128,7 +208,11 @@ class DashboardController extends Controller
                 ];
             });
 
-        return view('admin.dashboard', compact('stats', 'chartData', 'trendData', 'attentionUsers', 'recentActivities', 'filter'));
+        return view('admin.dashboard', compact(
+            'stats', 'chartData', 'trendData',
+            'attentionUsers', 'recentActivities',
+            'filter', 'warnings', 'insights'
+        ));
     }
 
     public function downloadExcel()
