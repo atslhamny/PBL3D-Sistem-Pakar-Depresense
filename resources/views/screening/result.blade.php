@@ -9,54 +9,29 @@
 
     $appreciationData = match($session->depression_level->value) {
         'minimal' => [
-            'icon'    => '🌟',
-            'title'   => 'Luar Biasa! Kamu Melakukan Hal yang Tepat',
-            'message' => 'Terima kasih telah meluangkan waktu untuk mengenal dirimu lebih dalam. Hasil menunjukkan kondisi mentalmu sangat baik — teruslah jaga pola hidup sehat dan semangat positif yang sudah kamu miliki!',
-            'gradient'=> 'from-emerald-500 to-teal-500',
-            'bg'      => 'bg-emerald-50',
-            'border'  => 'border-emerald-200',
-            'text'    => 'text-emerald-800',
-            'sub'     => 'text-emerald-600',
+            'title'   => 'Terima kasih telah menyelesaikan skrining.',
+            'message' => 'Kondisi mentalmu terlihat baik. Teruslah jaga pola hidup sehat dan tetap terhubung dengan orang-orang yang kamu sayangi.',
+            'accent'  => 'border-emerald-400 text-emerald-700',
         ],
         'ringan'  => [
-            'icon'    => '💛',
-            'title'   => 'Berani & Jujur — Itu Sudah Langkah Besar!',
-            'message' => 'Mengakui perasaanmu dengan jujur adalah tanda keberanian yang luar biasa. Kamu tidak sendirian — dengan dukungan yang tepat dan langkah kecil setiap hari, kamu pasti bisa melewati ini. Kami bangga kamu sudah mau mengenal dirimu lebih baik!',
-            'gradient'=> 'from-amber-400 to-yellow-400',
-            'bg'      => 'bg-amber-50',
-            'border'  => 'border-amber-200',
-            'text'    => 'text-amber-800',
-            'sub'     => 'text-amber-600',
+            'title'   => 'Langkah berani yang sudah kamu ambil hari ini.',
+            'message' => 'Mengisi skrining ini dengan jujur adalah awal yang baik. Kamu tidak sendirian — dukungan selalu tersedia untukmu.',
+            'accent'  => 'border-amber-400 text-amber-700',
         ],
         'sedang'  => [
-            'icon'    => '🤝',
-            'title'   => 'Terima Kasih Sudah Mempercayai Dirimu Sendiri',
-            'message' => 'Sungguh butuh keberanian untuk mengisi skrining ini dengan jujur. Hasil ini bukan akhir — ini adalah awal dari perjalananmu menuju kesehatan yang lebih baik. Yuk, ambil satu langkah kecil hari ini, dan ingat: meminta bantuan adalah tanda kekuatan, bukan kelemahan.',
-            'gradient'=> 'from-orange-400 to-amber-500',
-            'bg'      => 'bg-orange-50',
-            'border'  => 'border-orange-200',
-            'text'    => 'text-orange-800',
-            'sub'     => 'text-orange-600',
+            'title'   => 'Terima kasih atas kejujuranmu.',
+            'message' => 'Ini bukan akhir, melainkan titik awal perjalanan menuju kondisi yang lebih baik. Meminta bantuan adalah tanda kekuatan.',
+            'accent'  => 'border-orange-400 text-orange-700',
         ],
         'berat'   => [
-            'icon'    => '💙',
-            'title'   => 'Kamu Sudah Melakukan Sesuatu yang Luar Biasa Hari Ini',
-            'message' => 'Mengisi skrining ini adalah langkah pertama yang penuh keberanian. Kami sangat menghargai kepercayaan dan kejujuranmu. Tolong ingat — kamu tidak harus menghadapi ini sendirian. Ada orang-orang yang peduli dan siap membantumu. Ini bukan akhir ceritamu; ini bab baru yang bisa berubah menjadi lebih baik.',
-            'gradient'=> 'from-blue-500 to-indigo-500',
-            'bg'      => 'bg-blue-50',
-            'border'  => 'border-blue-200',
-            'text'    => 'text-blue-800',
-            'sub'     => 'text-blue-600',
+            'title'   => 'Kamu sudah melakukan sesuatu yang penting hari ini.',
+            'message' => 'Kami menghargai keberanianmu. Tolong ingat — kamu tidak harus menghadapi ini sendirian. Ada orang-orang yang peduli dan siap membantumu.',
+            'accent'  => 'border-blue-400 text-blue-700',
         ],
         default   => [
-            'icon'    => '✨',
-            'title'   => 'Terima Kasih Telah Menyelesaikan Skrining',
-            'message' => 'Langkah ini adalah tanda kepedulianmu terhadap diri sendiri. Teruslah menjaga kesehatan mentalmu dengan penuh kasih sayang.',
-            'gradient'=> 'from-slate-400 to-slate-500',
-            'bg'      => 'bg-slate-50',
-            'border'  => 'border-slate-200',
-            'text'    => 'text-slate-800',
-            'sub'     => 'text-slate-600',
+            'title'   => 'Terima kasih telah menyelesaikan skrining.',
+            'message' => 'Langkah ini adalah tanda kepedulianmu terhadap diri sendiri.',
+            'accent'  => 'border-slate-300 text-slate-600',
         ],
     };
 @endphp
@@ -105,22 +80,16 @@
         <p class="text-slate-500 text-sm">Berdasarkan jawaban Anda pada kuesioner BDI-II</p>
     </div>
 
-    {{-- ✨ APPRECIATION BANNER --}}
-    <div class="mb-10 rounded-[2rem] overflow-hidden shadow-md border {{ $appreciationData['border'] }}"
+    {{-- Appreciation strip (minimalis, mobile-friendly) --}}
+    <div class="mb-8 border-l-4 {{ $appreciationData['accent'] }} pl-4 py-2"
          x-data="{ visible: false }"
          x-init="setTimeout(() => visible = true, 100)"
          x-show="visible"
-         x-transition:enter="transition ease-out duration-700"
-         x-transition:enter-start="opacity-0 translate-y-4"
-         x-transition:enter-end="opacity-100 translate-y-0">
-        <div class="bg-gradient-to-r {{ $appreciationData['gradient'] }} px-6 py-1"></div>
-        <div class="{{ $appreciationData['bg'] }} px-7 py-6 flex items-start gap-5">
-            <div class="flex-shrink-0 text-4xl leading-none mt-1">{{ $appreciationData['icon'] }}</div>
-            <div class="flex-1">
-                <h3 class="{{ $appreciationData['text'] }} font-extrabold text-base mb-1.5">{{ $appreciationData['title'] }}</h3>
-                <p class="{{ $appreciationData['sub'] }} text-sm leading-relaxed">{{ $appreciationData['message'] }}</p>
-            </div>
-        </div>
+         x-transition:enter="transition ease-out duration-500"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100">
+        <p class="text-xs font-semibold {{ $appreciationData['accent'] }} mb-0.5">{{ $appreciationData['title'] }}</p>
+        <p class="text-xs text-slate-500 leading-relaxed">{{ $appreciationData['message'] }}</p>
     </div>
 
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">
@@ -221,22 +190,16 @@
         <p class="text-slate-500 text-sm">Berdasarkan jawaban Anda pada kuesioner BDI-II</p>
     </div>
 
-    {{-- ✨ APPRECIATION BANNER --}}
-    <div class="mb-10 rounded-[2rem] overflow-hidden shadow-md border {{ $appreciationData['border'] }}"
+    {{-- Appreciation strip (minimalis, mobile-friendly) --}}
+    <div class="mb-8 border-l-4 {{ $appreciationData['accent'] }} pl-4 py-2"
          x-data="{ visible: false }"
          x-init="setTimeout(() => visible = true, 100)"
          x-show="visible"
-         x-transition:enter="transition ease-out duration-700"
-         x-transition:enter-start="opacity-0 translate-y-4"
-         x-transition:enter-end="opacity-100 translate-y-0">
-        <div class="bg-gradient-to-r {{ $appreciationData['gradient'] }} px-6 py-1"></div>
-        <div class="{{ $appreciationData['bg'] }} px-7 py-6 flex items-start gap-5">
-            <div class="flex-shrink-0 text-4xl leading-none mt-1">{{ $appreciationData['icon'] }}</div>
-            <div class="flex-1">
-                <h3 class="{{ $appreciationData['text'] }} font-extrabold text-base mb-1.5">{{ $appreciationData['title'] }}</h3>
-                <p class="{{ $appreciationData['sub'] }} text-sm leading-relaxed">{{ $appreciationData['message'] }}</p>
-            </div>
-        </div>
+         x-transition:enter="transition ease-out duration-500"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100">
+        <p class="text-xs font-semibold {{ $appreciationData['accent'] }} mb-0.5">{{ $appreciationData['title'] }}</p>
+        <p class="text-xs text-slate-500 leading-relaxed">{{ $appreciationData['message'] }}</p>
     </div>
 
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">
