@@ -85,16 +85,10 @@
                     </div>
                     <div>
                         <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Total Pengguna</p>
-                        <h3 class="text-2xl font-bold text-[#0d7a70] mt-1.5 flex items-center gap-2">
+                        <h3 class="text-2xl font-bold text-[#0d7a70] mt-1.5">
                             {{ number_format($stats['total_users']) }}
-                            @php $uc = $stats['user_change']; @endphp
-                            @if($uc != 0)
-                            <span class="{{ $uc > 0 ? 'text-emerald-500 bg-emerald-50 border-emerald-100' : 'text-rose-500 bg-rose-50 border-rose-100' }} text-xs font-bold flex items-center px-2 py-0.5 rounded-lg border">
-                                {{ $uc > 0 ? '↑' : '↓' }}{{ abs($uc) }}%
-                            </span>
-                            @endif
                         </h3>
-                        <p class="text-[10px] text-slate-400 mt-2 font-semibold">dibandingkan 7 hari lalu</p>
+                        <p class="text-[10px] text-slate-400 mt-2 font-semibold">pengguna terdaftar</p>
                     </div>
                 </div>
                 <!-- Faint Silhouette Background Icon -->
@@ -115,16 +109,10 @@
                     </div>
                     <div>
                         <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Total Penilaian</p>
-                        <h3 class="text-2xl font-bold text-slate-800 mt-1.5 flex items-center gap-2">
+                        <h3 class="text-2xl font-bold text-slate-800 mt-1.5">
                             {{ number_format($stats['total_screenings']) }}
-                            @php $sc = $stats['screening_change']; @endphp
-                            @if($sc != 0)
-                            <span class="{{ $sc > 0 ? 'text-emerald-500 bg-emerald-50 border-emerald-100' : 'text-rose-500 bg-rose-50 border-rose-100' }} text-xs font-bold flex items-center px-2 py-0.5 rounded-lg border">
-                                {{ $sc > 0 ? '↑' : '↓' }}{{ abs($sc) }}%
-                            </span>
-                            @endif
                         </h3>
-                        <p class="text-[10px] text-slate-400 mt-2 font-semibold">dibandingkan 7 hari lalu</p>
+                        <p class="text-[10px] text-slate-400 mt-2 font-semibold">sesi penilaian dilakukan</p>
                     </div>
                 </div>
                 <!-- Faint Silhouette Background Icon -->
@@ -145,16 +133,10 @@
                     </div>
                     <div>
                         <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Persentase Depresi Tinggi</p>
-                        <h3 class="text-2xl font-bold text-rose-600 mt-1.5 flex items-center gap-2">
+                        <h3 class="text-2xl font-bold text-rose-600 mt-1.5">
                             {{ $stats['high_depression_percentage'] }}%
-                            @php $bc = $stats['berat_change']; @endphp
-                            @if($bc != 0)
-                            <span class="{{ $bc > 0 ? 'text-rose-500 bg-rose-50 border-rose-100' : 'text-emerald-500 bg-emerald-50 border-emerald-100' }} text-xs font-bold flex items-center px-2 py-0.5 rounded-lg border">
-                                {{ $bc > 0 ? '↑' : '↓' }}{{ abs($bc) }}%
-                            </span>
-                            @endif
                         </h3>
-                        <p class="text-[10px] text-slate-400 mt-2 font-semibold">dari sesi selesai, 7 hari lalu</p>
+                        <p class="text-[10px] text-slate-400 mt-2 font-semibold">dari total sesi selesai</p>
                     </div>
                 </div>
                 <!-- Faint Silhouette Background Icon -->

@@ -32,28 +32,31 @@ class DashboardController extends Controller
         $realBerat   = ScreeningSession::where('status', \App\Enums\SessionStatus::Completed)
             ->where('depression_level', \App\Enums\DepressionLevel::Berat)->count();
 
-        // ── 2. Perubahan minggu ini vs. 7 hari lalu (untuk badge ↑/↓) ───────
-        $thisWeekStart = now()->subDays(6)->startOfDay();
-        $lastWeekStart = now()->subDays(13)->startOfDay();
-        $lastWeekEnd   = now()->subDays(7)->endOfDay();
+        // ── 2. Perubahan 14 hari terakhir vs. 14 hari sebelumnya, cap 100% ──
+        $thisPeriodStart = now()->subDays(13)->startOfDay();
+        $lastPeriodStart = now()->subDays(27)->startOfDay();
+        $lastPeriodEnd   = now()->subDays(14)->endOfDay();
 
         $usersThisWeek = User::where('role', 'user')
-            ->where('created_at', '>=', $thisWeekStart)->count();
+            ->where('created_at', '>=', $thisPeriodStart)->count();
         $usersLastWeek = User::where('role', 'user')
-            ->whereBetween('created_at', [$lastWeekStart, $lastWeekEnd])->count();
+            ->whereBetween('created_at', [$lastPeriodStart, $lastPeriodEnd])->count();
 
-        $screeningsThisWeek = ScreeningSession::where('created_at', '>=', $thisWeekStart)->count();
-        $screeningsLastWeek = ScreeningSession::whereBetween('created_at', [$lastWeekStart, $lastWeekEnd])->count();
+        $screeningsThisWeek = ScreeningSession::where('created_at', '>=', $thisPeriodStart)->count();
+        $screeningsLastWeek = ScreeningSession::whereBetween('created_at', [$lastPeriodStart, $lastPeriodEnd])->count();
 
         $beratThisWeek = ScreeningSession::where('status', \App\Enums\SessionStatus::Completed)
             ->where('depression_level', \App\Enums\DepressionLevel::Berat)
-            ->where('created_at', '>=', $thisWeekStart)->count();
+            ->where('created_at', '>=', $thisPeriodStart)->count();
         $beratLastWeek = ScreeningSession::where('status', \App\Enums\SessionStatus::Completed)
             ->where('depression_level', \App\Enums\DepressionLevel::Berat)
-            ->whereBetween('created_at', [$lastWeekStart, $lastWeekEnd])->count();
+            ->whereBetween('created_at', [$lastPeriodStart, $lastPeriodEnd])->count();
 
-        // Helper closure: hitung selisih persentase antara dua periode
-        $calcChange = fn($now, $prev) => $prev > 0 ? round((($now - $prev) / $prev) * 100) : ($now > 0 ? 100 : 0);
+        // Helper closure: hitung selisih %, max ±100%
+        $calcChange = function($now, $prev) {
+            if ($prev <= 0) return $now > 0 ? 100 : 0;
+            return max(-100, min(100, round((($now - $prev) / $prev) * 100)));
+        };
 
         $userChangePercent      = $calcChange($usersThisWeek, $usersLastWeek);
         $screeningChangePercent = $calcChange($screeningsThisWeek, $screeningsLastWeek);
@@ -85,7 +88,7 @@ class DashboardController extends Controller
         // ── 5. Peringatan Sistem — dinamis berdasarkan kondisi real ──────────
         $warnings = [];
         if ($beratChangePercent > 0) {
-            $warnings[] = "Kasus depresi berat meningkat {$beratChangePercent}% dibanding minggu lalu.";
+            $warnings[] = "Kasus depresi berat meningkat dibanding 14 hari lalu.";
         }
         if ($realEmergency > 0) {
             $warnings[] = "Terdapat {$realEmergency} sesi dengan indikasi darurat yang perlu ditindaklanjuti.";
@@ -116,18 +119,17 @@ class DashboardController extends Controller
         if ($beratChangePercent > 0) {
             $insights[] = [
                 'type'    => 'warning',
-                'message' => "Terjadi <strong class=\"text-[#b91c1c]\">peningkatan {$beratChangePercent}%</strong> pada kategori depresi berat minggu ini.",
+                'message' => "Terjadi <strong class=\"text-[#b91c1c]\">peningkatan</strong> pada kasus depresi berat dibanding 14 hari lalu.",
             ];
         } elseif ($beratChangePercent < 0) {
-            $absChange = abs($beratChangePercent);
             $insights[] = [
                 'type'    => 'good',
-                'message' => "Kasus depresi berat <strong class=\"text-emerald-600\">turun {$absChange}%</strong> dibanding minggu lalu.",
+                'message' => "Kasus depresi berat <strong class=\"text-emerald-600]\">menurun</strong> dibanding 14 hari lalu.",
             ];
         } else {
             $insights[] = [
                 'type'    => 'neutral',
-                'message' => "Tingkat kasus depresi berat <strong class=\"text-slate-600\">stabil</strong> dibanding minggu lalu.",
+                'message' => "Tingkat kasus depresi berat <strong class=\"text-slate-600\">stabil</strong> dibanding 14 hari lalu.",
             ];
         }
 
